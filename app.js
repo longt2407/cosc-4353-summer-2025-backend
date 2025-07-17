@@ -35,6 +35,7 @@ app.post("/volunteer/login", volunteerController.login);
 app.post("/admin/login", adminController.login);
 
 // Event - /event/*
+app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
 // Notification - /notification/*

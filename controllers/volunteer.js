@@ -1,7 +1,6 @@
 import volunteerModel from "../models/volunteer.js";
 import httpResp from "../helpers/httpResp.js";
 import { HttpError }  from "../helpers/error.js";
-import auth from "../helpers/auth.js";
 import jwt from "../helpers/jwt.js";
 
 async function login(req, res) {
@@ -11,9 +10,7 @@ async function login(req, res) {
         body.password
     );
     if (volunteer) {
-        delete volunteer.password;
-        delete volunteer.reset_password_answer;
-        volunteer.role = auth.VOLUNTEER;
+        volunteerModel.prepare(volunteer);
         volunteer.token = jwt.sign({
             id: volunteer.id,
             email: volunteer.email,

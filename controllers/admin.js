@@ -1,7 +1,6 @@
 import adminModel from "../models/admin.js";
 import httpResp from "../helpers/httpResp.js";
 import { HttpError }  from "../helpers/error.js";
-import auth from "../helpers/auth.js";
 import jwt from "../helpers/jwt.js";
 
 async function login(req, res) {
@@ -11,9 +10,7 @@ async function login(req, res) {
         body.password
     );
     if (admin) {
-        delete admin.password;
-        delete admin.reset_password_answer;
-        admin.role = auth.ADMIN;
+        adminModel.prepare(admin);
         admin.token = jwt.sign({
             id: admin.id,
             email: admin.email,

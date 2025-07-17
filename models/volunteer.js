@@ -1,4 +1,22 @@
 import utils from "../helpers/utils.js";
+import auth from "../helpers/auth.js";
+
+function prepare(rows) {
+    const _prepare = (obj) => {
+        if (obj) {
+            delete obj.password;
+            delete obj.reset_password_answer;
+            obj.role = auth.VOLUNTEER;
+        }
+    }
+    if (!Array.isArray(rows)) {
+        _prepare(rows);
+    } else {
+        for (let row of rows) {
+            _prepare(row);
+        }
+    }
+}
 
 async function getOneByEmailAndPwd(email, password) {
     let data = utils.objectAssign(["email", "password"], { email, password });
@@ -28,5 +46,6 @@ async function getOneByEmailAndPwd(email, password) {
 }
 
 export default {
+    prepare,
     getOneByEmailAndPwd
 }
