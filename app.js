@@ -9,6 +9,7 @@ import httpResp from "./helpers/httpResp.js";
 import testController from "./controllers/test.js";
 import volunteerController from "./controllers/volunteer.js";
 import adminController from "./controllers/admin.js";
+import eventController from "./controllers/event.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -32,7 +33,9 @@ app.post("/volunteer/login", volunteerController.login);
 
 // Admin - /admin/*
 app.post("/admin/login", adminController.login);
+
 // Event - /event/*
+app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
 // Notification - /notification/*
 
