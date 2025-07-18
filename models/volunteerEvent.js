@@ -1,3 +1,5 @@
+import utils from "../helpers/utils.js";
+import auth from "../helpers/auth.js";
 import Validator from "../helpers/validator.js";
 import DataType from "../helpers/dataType.js";
 
@@ -17,6 +19,33 @@ const validator = new Validator({
     ]
 });
 
+const mockVolunteerEvent = {
+    id: 1,
+    volunteer_id: 1,
+    event_id: 1,
+    status: 0,
+    is_deleted: false,
+    created_at: new Date(),
+    updated_at: new Date(),
+    eleted_at: new Date()
+};
+
+// async function getOnevolunteerEventassign(id) {
+//     let data = utils.objectAssign(["id"], { id });
+//     validator.validate(data);
+//     // get event volunteer
+//     return mockVolunteerEvent;
+// }
+
+async function assignVolunteer(eventId, volunteerId) {
+    let data = utils.objectAssign(['event_id', 'volunteer_id'], { event_id: eventId }, { volunteer_id: volunteerId });
+    validator.validate(data);
+    // assign
+    return 1;
+}
+
 export default {
-    validator
+    validator,
+    //getOnevolunteerEventassign,
+    assignVolunteer
 }
