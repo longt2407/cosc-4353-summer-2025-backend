@@ -5,6 +5,7 @@ import DataType from "../helpers/dataType.js";
 import volunteerVerificationModel from "./volunteerVerification.js";
 import { HttpError } from "../helpers/error.js";
 import jwt from "../helpers/jwt.js";
+import pwd from "../helpers/pwd.js";
 
 const mockVolunteer = {
     id: 1,
@@ -94,6 +95,7 @@ function prepare(rows) {
 async function getOneByEmail(email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
+    // get
     return mockVolunteer;
 }
 
@@ -102,6 +104,7 @@ async function getOneByEmailAndPwd(email, password) {
     validator.validate(data);
     let volunteer = await getOneByEmail(data.email);
     // if (volunteer && await pwd.compare(data.password, volunteer.password)) {}
+    // get
     return mockVolunteer;
 }
 
@@ -121,10 +124,58 @@ async function createOneWithToken(token) {
     return 1;
 }
 
+async function getOne(id) {
+    let data = utils.objectAssign(["id"], { id });
+    validator.validate(data);
+    // get
+    return mockVolunteer;
+}
+
+async function getOneByEmailAndAnswer(email, answer) {
+    let data = utils.objectAssign(["email", "answer"], { email, answer });
+    validator.validate(data);
+    let volunteer = await getOneByEmail(data.email);
+    if (volunteer && await pwd.compare(answer, volunteer.reset_password_answer)) {
+        return mockVolunteer;
+    }
+    return null;
+}
+
+async function updatePassword(id, password) {
+    let data = utils.objectAssign(["id", "password"], { id, password });
+    validator.validate(data);
+    let volunteer = await getOne(data.id);
+    if (!volunteer) {
+        throw new HttpError({statusCode: 400, message: `Volunteer not found.`});
+    }
+    data.password = await pwd.hash(data.password);
+    // update
+    return 1;
+}
+
+async function updateQuestionAndAnswer(id, reset_password_question, reset_password_answer) {
+    let data = utils.objectAssign([
+        "id", 
+        "reset_password_question", 
+        "reset_password_answer"
+    ], { 
+        id, 
+        reset_password_question, 
+        reset_password_answer 
+    });
+    validator.validate(data);
+    data.reset_password_answer = await pwd.hash(data.reset_password_answer);
+    // update
+    return 1;
+}
+
 export default {
     validator,
     prepare,
     getOneByEmail,
     getOneByEmailAndPwd,
-    createOneWithToken
+    createOneWithToken,
+    getOneByEmailAndAnswer,
+    updatePassword,
+    updateQuestionAndAnswer
 }

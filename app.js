@@ -32,6 +32,10 @@ app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth)
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
 app.post("/volunteer/verify", volunteerController.verify);
+app.post("/volunteer/forget/question", volunteerController.getQuestion);
+app.post("/volunteer/forget", volunteerController.forget);
+app.patch("/volunteer/password", auth.is(auth.VOLUNTEER), volunteerController.updatePassword);
+app.patch("/volunteer/qa", auth.is(auth.VOLUNTEER), volunteerController.updateQuestionAndAnswer);
 
 // Admin - /admin/*
 app.post("/admin/login", adminController.login);
