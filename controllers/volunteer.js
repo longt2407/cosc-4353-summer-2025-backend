@@ -25,12 +25,16 @@ async function login(req, res) {
 
 async function register(req, res) {
     let body = req.body;
-    await volunteerVerificationModel.createOne(body);
-    return httpResp.Success[200](req, res, null);
+    let verifyToken = await volunteerVerificationModel.createOne(body);
+    return httpResp.Success[200](req, res, {
+        token: verifyToken
+    });
 }
 
 async function verify(req, res) {
-    
+    let verifyToken = req.body.token;
+    let volunteerId = await volunteerModel.createOneWithToken(verifyToken);
+    return httpResp.Success[200](req, res, volunteerId);
 }
 
 export default {

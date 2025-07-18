@@ -31,12 +31,12 @@ app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth)
 // Volunteer - /volunteer/*
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
-app.get("/volunteer/verify/:token", volunteerController.verify);
+app.post("/volunteer/verify", volunteerController.verify);
 
 // Admin - /admin/*
 app.post("/admin/login", adminController.login);
 app.post("/admin/register", adminController.register);
-app.get("/admin/verify/:token", adminController.verify);
+app.post("/admin/verify", adminController.verify);
 
 // Event - /event/*
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);

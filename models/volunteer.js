@@ -2,6 +2,32 @@ import utils from "../helpers/utils.js";
 import auth from "../helpers/auth.js";
 import Validator from "../helpers/validator.js";
 import DataType from "../helpers/dataType.js";
+import volunteerVerificationModel from "./volunteerVerification.js";
+import { HttpError } from "../helpers/error.js";
+import jwt from "../helpers/jwt.js";
+
+const mockVolunteer = {
+    id: 1,
+    email: "volunteer@domain.com",
+    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    reset_password_question: "1 + 1 = ?",
+    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    first_name: "Peter",
+    middle_name: null,
+    last_name: "Parker",
+    address_1: "123 Street Dr",
+    address_2: null,
+    address_city: "Star",
+    address_state: "TX",
+    address_zip: "70000",
+    skill: JSON.parse(JSON.stringify(["communication", "technology", "leader"])),
+    preference: null,
+    availability: JSON.parse(JSON.stringify([(new Date()).getTime(), (new Date()).getTime() + 1 * 24 * 60 * 60 * 1000])),
+    is_deleted: false,
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: new Date()
+};
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
@@ -68,28 +94,7 @@ function prepare(rows) {
 async function getOneByEmail(email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
-    return {
-        id: 1,
-        email: "volunteer@domain.com",
-        password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        reset_password_question: "1 + 1 = ?",
-        reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        first_name: "Peter",
-        middle_name: null,
-        last_name: "Parker",
-        address_1: "123 Street Dr",
-        address_2: null,
-        address_city: "Star",
-        address_state: "TX",
-        address_zip: "70000",
-        skill: JSON.parse(JSON.stringify(["communication","technology","leader"])),
-        preference: null,
-        availability: JSON.parse(JSON.stringify([(new Date()).getTime(), (new Date()).getTime() + 1 * 24 * 60 * 60 * 1000])),
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: new Date()
-    };
+    return mockVolunteer;
 }
 
 async function getOneByEmailAndPwd(email, password) {
@@ -97,32 +102,29 @@ async function getOneByEmailAndPwd(email, password) {
     validator.validate(data);
     let volunteer = await getOneByEmail(data.email);
     // if (volunteer && await pwd.compare(data.password, volunteer.password)) {}
-    return {
-        id: 1,
-        email: "volunteer@domain.com",
-        password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        reset_password_question: "1 + 1 = ?",
-        reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        first_name: "Peter",
-        middle_name: null,
-        last_name: "Parker",
-        address_1: "123 Street Dr",
-        address_2: null,
-        address_city: "Star",
-        address_state: "TX",
-        address_zip: "70000",
-        skill: JSON.parse(JSON.stringify(["communication","technology","leader"])),
-        preference: null,
-        availability: JSON.parse(JSON.stringify([(new Date()).getTime(), (new Date()).getTime() + 1 * 24 * 60 * 60 * 1000])),
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: new Date()
+    return mockVolunteer;
+}
+
+async function createOneWithToken(token) {
+    let data = utils.objectAssign(["token"], { token });
+    volunteerVerificationModel.validator.validate(data);
+    try {
+        jwt.verify(data.token);
+    } catch (e) {
+        throw new HttpError({ statusCode: 400, message: `Invalid token.`});
     }
+    let volunteerVerification = await volunteerVerificationModel.getOneByToken(data.token);
+    if (!volunteerVerification) {
+        throw new HttpError({ statusCode: 400, message: `Invalid token.`});
+    }
+    // create
+    return 1;
 }
 
 export default {
+    validator,
     prepare,
     getOneByEmail,
-    getOneByEmailAndPwd
+    getOneByEmailAndPwd,
+    createOneWithToken
 }

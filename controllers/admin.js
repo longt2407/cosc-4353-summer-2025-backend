@@ -25,12 +25,16 @@ async function login(req, res) {
 
 async function register(req, res) {
     let body = req.body;
-    await adminVerificationModel.createOne(body);
-    return httpResp.Success[200](req, res, null);
+    let verifyToken = await adminVerificationModel.createOne(body);
+    return httpResp.Success[200](req, res, {
+        token: verifyToken
+    });
 }
 
 async function verify(req, res) {
- 
+    let verifyToken = req.body.token;
+    let adminId = await adminModel.createOneWithToken(verifyToken);
+    return httpResp.Success[200](req, res, adminId);
 }
 
 export default {

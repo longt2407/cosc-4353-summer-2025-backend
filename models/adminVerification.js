@@ -6,6 +6,19 @@ import adminModel from "./admin.js";
 import pwd from "../helpers/pwd.js";
 import jwt from "../helpers/jwt.js";
 
+const mockAdminVerification = {
+    id: 1,
+    email: "admin@domain.com",
+    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    reset_password_question: "1 + 1 = ?",
+    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTU0MDg3MTgsImRhdGEiOnsiZW1haWwiOiJhZG1pbkBkb21haW4uY29tIn0sImlhdCI6MTc1MjgxNjcxOH0.nzjgtvGy7azvK3g_IwHGrc0pRn4IDyF8PEqm2SOpmsU",
+    is_deleted: false,
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: new Date()
+}
+
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
     email: [DataType.STRING({
@@ -27,17 +40,14 @@ async function getOneByEmail(email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
     // get
-    return {
-        id: 1,
-        email: "admin@domain.com",
-        password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        reset_password_question: "1 + 1 = ?",
-        reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: new Date()
-    };
+    return mockAdminVerification;
+}
+
+async function getOneByToken(token) {
+    let data = utils.objectAssign(["token"], { token });
+    validator.validate(data);
+    // get
+    return mockAdminVerification;
 }
 
 async function createOne(admin) {
@@ -55,29 +65,21 @@ async function createOne(admin) {
     data.password = await pwd.hash(data.password);
     data.reset_password_answer = await pwd.hash(data.reset_password_answer)
     let adminVerification = await getOneByEmail(data.email);
+    let token = jwt.sign({
+        email: data.email,
+    });
     if (!adminVerification) {
-        let token = jwt.sign({
-            email: data.email,
-        });
         // create
-        // nodemailer
     }
     if (adminVerification) {
-        let token = adminVerification.token;
-        try {
-            jwt.verify(token);
-        } catch (e) {
-            token = jwt.sign({
-                email: data.email,
-            });
-            // update
-        }
-        // nodemailer
+        // update
     }
-    return 1;
+    return token;
 }
 
 export default {
+    validator,
     getOneByEmail,
+    getOneByToken,
     createOne
 }
