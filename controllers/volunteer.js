@@ -72,6 +72,17 @@ async function updateQuestionAndAnswer(req, res) {
     return httpResp.Success[200](req, res, null);
 }
 
+async function getProfile(req, res) {
+    let volunteerId = req.jwt.user.id;
+    let data = await volunteerModel.getOne(volunteerId);
+    volunteerModel.prepare(data);
+    return httpResp.Success[200](req, res, data);
+}
+
+async function updateProfile(req, res) {
+    return httpResp.Success[200](req, res, null);
+}
+
 export default {
     login,
     register,
@@ -79,5 +90,7 @@ export default {
     getQuestion,
     forget,
     updatePassword,
-    updateQuestionAndAnswer
+    updateQuestionAndAnswer,
+    getProfile,
+    updateProfile
 }
