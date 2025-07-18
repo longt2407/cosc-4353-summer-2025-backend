@@ -10,6 +10,9 @@ import testController from "./controllers/test.js";
 import volunteerController from "./controllers/volunteer.js";
 import adminController from "./controllers/admin.js";
 import eventController from "./controllers/event.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import volunteerRoutes from "./routes/volunteerReport.js";
+import volunteerHistoryRoutes from "./routes/volunteerHistoryRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -29,6 +32,9 @@ app.delete("/test/echo/:message", testController.echoDelete);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
 // Volunteer - /volunteer/*
+app.use("/report/volunteers", volunteerRoutes);
+app.use("/history/volunteers", volunteerHistoryRoutes);
+
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
 app.post("/volunteer/verify", volunteerController.verify);
@@ -47,6 +53,7 @@ app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
 // Notification - /notification/*
+app.use("/notification", auth.is(auth.ADMIN, auth.VOLUNTEER), notificationRoutes);
 
 // *
 app.use(httpResp.Error[404]);
