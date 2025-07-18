@@ -59,6 +59,10 @@ app.patch("/admin/profile", auth.is(auth.ADMIN), adminController.updateProfile);
 // Event
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
+app.patch("/event/:id", auth.is(auth.ADMIN), eventController.updateOne); 
+app.delete("/event/:id", auth.is(auth.ADMIN), eventController.deleteOne);
+app.patch("/event/:id/assign", auth.is(auth.ADMIN), eventController.assignVolunteer)
+app.patch("/event/:id/drop", auth.is(auth.ADMIN), eventController.dropVolunteer)
 
 // Notification
 app.use('/notification', notificationRoutes);
