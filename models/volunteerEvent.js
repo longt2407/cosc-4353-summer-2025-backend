@@ -30,22 +30,28 @@ const mockVolunteerEvent = {
     eleted_at: new Date()
 };
 
-// async function getOnevolunteerEventassign(id) {
-//     let data = utils.objectAssign(["id"], { id });
-//     validator.validate(data);
-//     // get event volunteer
-//     return mockVolunteerEvent;
-// }
-
 async function assignVolunteer(eventId, volunteerId) {
-    let data = utils.objectAssign(['event_id', 'volunteer_id'], { event_id: eventId }, { volunteer_id: volunteerId });
+    let data = utils.objectAssign(['event_id', 'volunteer_id'], { 
+        event_id: eventId,
+        volunteer_id: volunteerId
+    });
     validator.validate(data);
     // assign
     return 1;
 }
 
+async function dropVolunteer(eventId, volunteerId) {
+    let data = utils.objectAssign(['event_id', 'volunteer_id'], { 
+        event_id: eventId,
+        volunteer_id: volunteerId
+    });
+    validator.validate(data);
+    // drop
+    return 1;
+}
+
 export default {
     validator,
-    //getOnevolunteerEventassign,
-    assignVolunteer
+    assignVolunteer,
+    dropVolunteer
 }

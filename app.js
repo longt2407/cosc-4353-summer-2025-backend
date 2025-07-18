@@ -62,6 +62,7 @@ app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 app.patch("/event/:id", auth.is(auth.ADMIN), eventController.updateOne); 
 app.delete("/event/:id", auth.is(auth.ADMIN), eventController.deleteOne);
 app.patch("/event/:id/assign", auth.is(auth.ADMIN), eventController.assignVolunteer)
+app.patch("/event/:id/drop", auth.is(auth.ADMIN), eventController.dropVolunteer)
 
 // Notification
 app.use("/notification", auth.is(auth.ADMIN, auth.VOLUNTEER), notificationRoutes);

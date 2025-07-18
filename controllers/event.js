@@ -1,5 +1,5 @@
 import eventModel from "../models/event.js";
-import volunteerEventmodel from "../models/volunteerEvent.js";
+import volunteerEventModel from "../models/volunteerEvent.js";
 import httpResp from "../helpers/httpResp.js";
 import utils from "../helpers/utils.js";
 
@@ -39,8 +39,25 @@ async function assignVolunteer(req, res) {
     let body = req.body;
     let volunteerId = body.volunteer_id;
     let eventId = utils.parseStr(req.params.id);
-    await volunteerEventmodel.assignVolunteer(eventId, volunteerId);
-    //let assignVolunteer = await volunteerEventmodel.getOnevolunteerEventassign(volunteerEventassignId);
+    let adminId = req.jwt.user.id;
+    let event = await eventModel.getOneByAdminId(eventId, adminId);
+    if (!event) {
+        throw new HttpError({ statusCode: 400, message: "Event not found." })
+    }
+    await volunteerEventModel.assignVolunteer(eventId, volunteerId);
+    return httpResp.Success[200](req, res, null);
+}
+
+async function dropVolunteer(req, res) {
+    let body = req.body;
+    let volunteerId = body.volunteer_id;
+    let eventId = utils.parseStr(req.params.id);
+    let adminId = req.jwt.user.id;
+    let event = await eventModel.getOneByAdminId(eventId, adminId);
+    if (!event) {
+        throw new HttpError({ statusCode: 400, message: "Event not found." })
+    }
+    await volunteerEventModel.dropVolunteer(eventId, volunteerId);
     return httpResp.Success[200](req, res, null);
 }
 
@@ -49,5 +66,6 @@ export default {
     createOne,
     updateOne,
     deleteOne,
-    assignVolunteer
+    assignVolunteer,
+    dropVolunteer
 }

@@ -158,6 +158,13 @@ async function deleteOne(id) {
     return 1;
 }
 
+async function getOneByAdminId(id, admin_id) {
+    let data = utils.objectAssign(["id", "admin_id"], { id, admin_id });
+    validator.validate(data);
+    // get event
+    return mockEventA;
+}
+
 export default {
     validator,
     prepare,
@@ -165,5 +172,6 @@ export default {
     getAllByAdminId,
     getOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    getOneByAdminId
 }
