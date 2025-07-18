@@ -5,9 +5,9 @@ import {getAllNotifs, markAsReadNotif, deleteNotifById, createNewNotif} from "..
 const router = express.Router();
 router.use(auth.is(auth.ADMIN, auth.VOLUNTEER));
 
-router.get('/volunteer/:id/notification', getAllNotifs);
-router.post('/volunteers/:id/notifications', createNewNotif);
-router.put('/volunteers/:id/notifications/:nid', markAsReadNotif);
-router.delete('/volunteers/:id/notifications/:nid', deleteNotifById);
+router.get('/:id/notifications', getAllNotifs);
+router.post('/:id/notifications', createNewNotif);
+router.put('/:id/notifications/:nid', markAsReadNotif);
+router.delete('/:id/notifications/:nid', deleteNotifById);
 
 export default router;

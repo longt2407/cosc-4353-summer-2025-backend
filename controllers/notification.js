@@ -13,7 +13,7 @@ const isAuthorized = (req) => {
 
 //GET
 export const getAllNotifs = async (req, res) => {
-    console.log("req.jwt: ", req.jwt);
+    //console.log("req.jwt: ", req.jwt);
     const volunteerID = parseInt(req.params.id);
     if(!isAuthorized(req, volunteerID)) {
         return Error[403](req, res, new Error("Unauthorized access."));

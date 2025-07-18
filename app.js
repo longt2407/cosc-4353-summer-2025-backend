@@ -43,7 +43,7 @@ app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
 // Notification - /notification/*
-app.use("/notification", auth.is(auth.ADMIN, auth.VOLUNTEER), notificationRoutes);
+app.use('/notification', notificationRoutes);
 
 // *
 app.use(httpResp.Error[404]);
