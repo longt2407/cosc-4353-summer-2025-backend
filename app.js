@@ -35,8 +35,26 @@ app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth)
 app.post("/volunteer/login", volunteerController.login);
 app.use("/report/volunteers", volunteerRoutes);
 app.use("/history/volunteers", volunteerHistoryRoutes);
-// Admin - /admin/*
+app.post("/volunteer/login", volunteerController.login);
+app.post("/volunteer/register", volunteerController.register);
+app.post("/volunteer/verify", volunteerController.verify);
+app.post("/volunteer/forget/question", volunteerController.getQuestion);
+app.post("/volunteer/forget", volunteerController.forget);
+app.patch("/volunteer/password", auth.is(auth.VOLUNTEER), volunteerController.updatePassword);
+app.patch("/volunteer/qa", auth.is(auth.VOLUNTEER), volunteerController.updateQuestionAndAnswer);
+app.get("/volunteer/profile", auth.is(auth.VOLUNTEER), volunteerController.getProfile);
+app.patch("/volunteer/profile", auth.is(auth.VOLUNTEER), volunteerController.updateProfile);
+
+// Admin
 app.post("/admin/login", adminController.login);
+app.post("/admin/register", adminController.register);
+app.post("/admin/verify", adminController.verify);
+app.post("/admin/forget/question", adminController.getQuestion);
+app.post("/admin/forget", adminController.forget);
+app.patch("/admin/password", auth.is(auth.ADMIN), adminController.updatePassword);
+app.patch("/admin/qa", auth.is(auth.ADMIN), adminController.updateQuestionAndAnswer);
+app.get("/admin/profile", auth.is(auth.ADMIN), adminController.getProfile);
+app.patch("/admin/profile", auth.is(auth.ADMIN), adminController.updateProfile);
 
 // Event - /event/*
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
