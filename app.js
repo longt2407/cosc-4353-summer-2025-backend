@@ -31,7 +31,7 @@ app.patch("/test/echo/:message", testController.echoPatch);
 app.delete("/test/echo/:message", testController.echoDelete);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
-// Volunteer - /volunteer/*
+// Volunteer
 app.use("/report/volunteers", volunteerRoutes);
 app.use("/history/volunteers", volunteerHistoryRoutes);
 
@@ -43,16 +43,20 @@ app.post("/volunteer/forget", volunteerController.forget);
 app.patch("/volunteer/password", auth.is(auth.VOLUNTEER), volunteerController.updatePassword);
 app.patch("/volunteer/qa", auth.is(auth.VOLUNTEER), volunteerController.updateQuestionAndAnswer);
 
-// Admin - /admin/*
+// Admin
 app.post("/admin/login", adminController.login);
 app.post("/admin/register", adminController.register);
 app.post("/admin/verify", adminController.verify);
+app.post("/admin/forget/question", adminController.getQuestion);
+app.post("/admin/forget", adminController.forget);
+app.patch("/admin/password", auth.is(auth.ADMIN), adminController.updatePassword);
+app.patch("/admin/qa", auth.is(auth.ADMIN), adminController.updateQuestionAndAnswer);
 
-// Event - /event/*
+// Event
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
-// Notification - /notification/*
+// Notification
 app.use("/notification", auth.is(auth.ADMIN, auth.VOLUNTEER), notificationRoutes);
 
 // *

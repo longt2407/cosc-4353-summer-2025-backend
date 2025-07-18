@@ -175,6 +175,7 @@ export default {
     getOneByEmail,
     getOneByEmailAndPwd,
     createOneWithToken,
+    getOne,
     getOneByEmailAndAnswer,
     updatePassword,
     updateQuestionAndAnswer
