@@ -169,6 +169,34 @@ async function updateQuestionAndAnswer(id, reset_password_question, reset_passwo
     return 1;
 }
 
+async function updateOne(newVolunteer) {
+    let oldVolunteer = await getOne(newVolunteer.id);
+    if (!oldVolunteer) {
+        throw new HttpError({statusCode: 400, message: `Volunteer not found.`});
+    }
+    let data = utils.objectAssign(
+        [
+            "id", 
+            "first_name",
+            "middle_name",
+            "last_name",
+            "address_1",
+            "address_2",
+            "address_city",
+            "address_state",
+            "address_zip",
+            "skill",
+            "preference",
+            "availability"
+        ], 
+        oldVolunteer, 
+        newVolunteer
+    );
+    validator.validate(data);
+    // update
+    return data.id;
+}
+
 export default {
     validator,
     prepare,
@@ -178,5 +206,6 @@ export default {
     getOne,
     getOneByEmailAndAnswer,
     updatePassword,
-    updateQuestionAndAnswer
+    updateQuestionAndAnswer,
+    updateOne
 }

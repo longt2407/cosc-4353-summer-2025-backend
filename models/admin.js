@@ -133,6 +133,26 @@ async function updateQuestionAndAnswer(id, reset_password_question, reset_passwo
     return 1;
 }
 
+async function updateOne(newAdmin) {
+    let oldAdmin = await getOne(newAdmin.id);
+    if (!oldAdmin) {
+        throw new HttpError({statusCode: 400, message: `Admin not found.`});
+    }
+    let data = utils.objectAssign(
+        [
+            "id", 
+            "first_name",
+            "middle_name",
+            "last_name",
+        ], 
+        oldAdmin, 
+        newAdmin
+    );
+    validator.validate(data);
+    // update
+    return data.id;
+}
+
 export default {
     validator,
     prepare,
@@ -142,5 +162,6 @@ export default {
     getOne,
     getOneByEmailAndAnswer,
     updatePassword,
-    updateQuestionAndAnswer
+    updateQuestionAndAnswer,
+    updateOne
 }

@@ -80,7 +80,12 @@ async function getProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
-    return httpResp.Success[200](req, res, null);
+    let body = req.body;
+    body.id = req.jwt.user.id;
+    let adminId = await adminModel.updateOne(body);
+    let admin = await adminModel.getOne(adminId);
+    adminModel.prepare(admin);
+    return httpResp.Success[200](req, res, admin);
 }
 
 export default {
