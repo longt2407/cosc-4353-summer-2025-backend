@@ -202,10 +202,17 @@ async function updateOne(id, newEvent) {
     return allEvents.find(event => event.id === parseInt(id, 10));
 }
 
+async function deleteOne(id) {
+    let data = utils.objectAssign(["id"], { id });
+    // validate data
+    return true;
+}
+
 export default {
     prepare,
     createOne,
     getAllByAdminId,
     getOne,
-    updateOne
+    updateOne,
+    deleteOne
 }

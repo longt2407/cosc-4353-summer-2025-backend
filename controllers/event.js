@@ -1,6 +1,5 @@
 import eventModel from "../models/event.js";
 import httpResp from "../helpers/httpResp.js";
-import { HttpError }  from "../helpers/error.js";
 
 async function getAllByAdminId(req, res){
     let adminId = req.jwt.user.id;
@@ -27,8 +26,17 @@ async function updateOne(req,res) {
     return httpResp.Success[200](req, res, updatedEvent);
 }
 
+async function deleteOne(req, res) {
+    let eventId = req.params.id;
+    await eventModel.deleteOne(eventId);
+    //return null;
+    return httpResp.Success[200](req, res, { message: "Event deleted." });
+
+}
+
 export default {
     getAllByAdminId,
     createOne,
-    updateOne
+    updateOne,
+    deleteOne
 }
