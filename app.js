@@ -7,6 +7,9 @@ import auth from "./helpers/auth.js";
 import httpResp from "./helpers/httpResp.js";
 
 import testController from "./controllers/test.js";
+import volunteerController from "./controllers/volunteer.js";
+import adminController from "./controllers/admin.js";
+import eventController from "./controllers/event.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -26,10 +29,14 @@ app.delete("/test/echo/:message", testController.echoDelete);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
 // Volunteer - /volunteer/*
+app.post("/volunteer/login", volunteerController.login);
 
 // Admin - /admin/*
+app.post("/admin/login", adminController.login);
 
 // Event - /event/*
+app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
+app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
 // Notification - /notification/*
 
