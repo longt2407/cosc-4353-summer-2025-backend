@@ -33,8 +33,8 @@ app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth)
 
 // Volunteer - /volunteer/*
 app.post("/volunteer/login", volunteerController.login);
-app.use("/report/volunteers", volunteerRoutes);
-app.use("/history/volunteers", volunteerHistoryRoutes);
+app.use("/volunteer/report/", volunteerRoutes);
+app.use("/volunteer/history/", volunteerHistoryRoutes);
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
 app.post("/volunteer/verify", volunteerController.verify);
