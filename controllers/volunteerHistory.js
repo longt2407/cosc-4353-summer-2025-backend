@@ -6,17 +6,23 @@ const {Success, Error} = httpResp;
 export const getVolunteerHistory = async (req, res) => {
     try{
         const {volunteer_id} = req.params;
-        const volunteer = getHistoryByVolunteerId(volunteer_id);
+        console.log("volunteer_id:", volunteer_id);
+        const history = getHistoryByVolunteerId(volunteer_id);
+        console.log("history found:", history);
 
-        if(!volunteer_id) {
+        if (!volunteer_id) {
+            console.log("Missing volunteer_id");
             return Error[400](req, res, new Error("Volunteer ID is required"));
         }
-        if(!volunteer) {
-            return Error[404](req, res, new Error("Volunteer not found"));
-        }
 
-        return Success[200](req, res, volunteer);
+        if(!history) {
+            console.log("Volunteer history not found");
+            return Error[400](req, res, new Error("Volunteer ID is required"));
+        }
+        console.log("Returning events:", history.events);
+        return res.status(200).json({message: "success", data: history,});
     }catch(err){
+        console.log("Caught error:", err);
         return Error[500](req, res, err);
     }
 }
