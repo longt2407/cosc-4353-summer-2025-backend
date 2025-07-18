@@ -32,8 +32,8 @@ async function register(req, res) {
 }
 
 async function verify(req, res) {
-    let verifyToken = req.body.token;
-    let adminId = await adminModel.createOneWithToken(verifyToken);
+    let body = req.body;
+    let adminId = await adminModel.createOneWithToken(body);
     return httpResp.Success[200](req, res, adminId);
 }
 

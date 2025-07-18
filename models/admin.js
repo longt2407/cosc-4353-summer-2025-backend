@@ -72,9 +72,15 @@ async function getOneByEmailAndPwd(email, password) {
     return mockAdmin;
 }
 
-async function createOneWithToken(token) {
-    let data = utils.objectAssign(["token"], { token });
+async function createOneWithToken(admin) {
+    let data = utils.objectAssign([
+        "token",
+        "first_name",
+        "middle_name",
+        "last_name"
+    ], admin);
     adminVerificationModel.validator.validate(data);
+    validator.validate(data);
     try {
         jwt.verify(data.token);
     } catch (e) {

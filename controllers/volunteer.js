@@ -32,8 +32,8 @@ async function register(req, res) {
 }
 
 async function verify(req, res) {
-    let verifyToken = req.body.token;
-    let volunteerId = await volunteerModel.createOneWithToken(verifyToken);
+    let body = req.body;
+    let volunteerId = await volunteerModel.createOneWithToken(body);
     return httpResp.Success[200](req, res, volunteerId);
 }
 

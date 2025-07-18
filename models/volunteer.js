@@ -108,9 +108,23 @@ async function getOneByEmailAndPwd(email, password) {
     return mockVolunteer;
 }
 
-async function createOneWithToken(token) {
-    let data = utils.objectAssign(["token"], { token });
+async function createOneWithToken(volunteer) {
+    let data = utils.objectAssign([
+        "token",
+        "first_name",
+        "middle_name",
+        "last_name",
+        "address_1",
+        "address_2",
+        "address_city",
+        "address_state",
+        "address_zip",
+        "skill",
+        "preference",
+        "availability"
+    ], volunteer);
     volunteerVerificationModel.validator.validate(data);
+    validator.validate(data);
     try {
         jwt.verify(data.token);
     } catch (e) {
