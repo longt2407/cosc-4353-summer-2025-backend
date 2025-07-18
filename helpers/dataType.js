@@ -9,7 +9,7 @@ class ARRAY {
         }
         if (val) {
             for (let v of val) {
-                if(this.elementType.check(v).error) {
+                if(this.elementType.check(v) && this.elementType.check(v).error) {
                     return {
                         error: new Error("invalid")
                     };

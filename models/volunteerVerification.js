@@ -62,7 +62,7 @@ async function createOne(volunteer) {
         // create
         // nodemailer
     }
-    if (volunteer) {
+    if (volunteerVerification) {
         let token = volunteerVerification.token;
         try {
             jwt.verify(token);
