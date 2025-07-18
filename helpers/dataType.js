@@ -9,7 +9,7 @@ class ARRAY {
         }
         if (val) {
             for (let v of val) {
-                if(!this.elementType.check(v)) {
+                if(this.elementType.check(v) && this.elementType.check(v).error) {
                     return {
                         error: new Error("invalid")
                     };
@@ -64,7 +64,7 @@ class STRING {
     }
 }
 
-class TIMESTAMP {
+class DATETIME {
     check(val) {
         // val must be in milliseconds
         if (val && utils.isNaN(val)) {
@@ -124,7 +124,7 @@ class DataType {
     static ARRAY(opt) { return new ARRAY(opt); }
     static NUMBER(opt) { return new NUMBER(opt); }
     static STRING(opt) { return new STRING(opt); }
-    static TIMESTAMP(opt) { return new TIMESTAMP(opt); }
+    static DATETIME(opt) { return new DATETIME(opt); }
     static ANY(opt) { return new ANY(opt); }
     static NOTNULL(opt) { return new NOTNULL(opt); }
 }
