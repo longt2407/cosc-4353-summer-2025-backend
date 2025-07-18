@@ -32,8 +32,8 @@ app.delete("/test/echo/:message", testController.echoDelete);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
 // Volunteer
-app.use("/report/volunteers", volunteerRoutes);
-app.use("/history/volunteers", volunteerHistoryRoutes);
+app.use("/volunteer/report/", volunteerRoutes);
+app.use("/volunteer/history/", volunteerHistoryRoutes);
 
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
@@ -65,7 +65,7 @@ app.patch("/event/:id/assign", auth.is(auth.ADMIN), eventController.assignVolunt
 app.patch("/event/:id/drop", auth.is(auth.ADMIN), eventController.dropVolunteer)
 
 // Notification
-app.use("/notification", auth.is(auth.ADMIN, auth.VOLUNTEER), notificationRoutes);
+app.use('/notification', notificationRoutes);
 
 // *
 app.use(httpResp.Error[404]);
