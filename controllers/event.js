@@ -29,7 +29,6 @@ async function updateOne(req,res) {
 async function deleteOne(req, res) {
     let eventId = req.params.id;
     await eventModel.deleteOne(eventId);
-    //return null;
     return httpResp.Success[200](req, res, { message: "Event deleted." });
 
 }

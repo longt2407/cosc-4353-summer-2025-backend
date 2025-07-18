@@ -134,6 +134,8 @@ async function getOne(id) {
 
 async function updateOne(id, newEvent) {
     let data = utils.objectAssign(["id"], { id });
+    // validate data
+    // update event
     data = utils.objectAssign([
         "admin_id",
         "name",
@@ -143,7 +145,7 @@ async function updateOne(id, newEvent) {
         "urgency",
         "date"
     ], data, newEvent);
-    let allEvents = [{
+    let newEvents = [{
         id: 1,
         admin_id: 1,
         admin: {
@@ -199,7 +201,7 @@ async function updateOne(id, newEvent) {
         deleted_at: new Date()
         
     }];
-    return allEvents.find(event => event.id === parseInt(id, 10));
+    return newEvents.find(event => event.id === parseInt(id, 10));
 }
 
 async function deleteOne(id) {
