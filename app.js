@@ -37,7 +37,7 @@ app.post("/admin/login", adminController.login);
 // Event - /event/*
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
-
+app.patch("/event/:id", auth.is(auth.ADMIN), eventController.updateOne); 
 // Notification - /notification/*
 
 // *

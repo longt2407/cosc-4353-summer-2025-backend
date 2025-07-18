@@ -132,9 +132,80 @@ async function getOne(id) {
     };
 }
 
+async function updateOne(id, newEvent) {
+    let data = utils.objectAssign(["id"], { id });
+    data = utils.objectAssign([
+        "admin_id",
+        "name",
+        "description",
+        "location",
+        "skill",
+        "urgency",
+        "date"
+    ], data, newEvent);
+    let allEvents = [{
+        id: 1,
+        admin_id: 1,
+        admin: {
+            id: 1,
+            email: "admin@domain.com",
+            password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+            reset_password_question: "1 + 1 = ?",
+            reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+            first_name: "Admin",
+            middle_name: null,
+            last_name: "Account",
+            is_deleted: false,
+            created_at: new Date(),
+            updated_at: new Date(),
+            deleted_at: new Date()
+        },
+        name: "Event A after Update",
+        descriotion: "Description of Event A",
+        location: "Location A",
+        skill: JSON.parse(JSON.stringify(["communication","technology","leader"])),
+        urgency: 0,
+        date: new Date(),
+        is_deleted: false,
+        created_at: new Date(),
+        updated_at: new Date(),
+        deleted_at: new Date()
+    },{
+        id: 2,
+        admin_id: 1,
+        admin: {
+            id: 1,
+            email: "admin@domain.com",
+            password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+            reset_password_question: "1 + 1 = ?",
+            reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+            first_name: "Admin",
+            middle_name: null,
+            last_name: "Account",
+            is_deleted: false,
+            created_at: new Date(),
+            updated_at: new Date(),
+            deleted_at: new Date()
+        },
+        name: "Event B after Update",
+        descriotion: "Description of Event B",
+        location: "Location B after update",
+        skill: JSON.parse(JSON.stringify(["communication","technology"])),
+        urgency: 1,
+        date: new Date(),
+        is_deleted: false,
+        created_at: new Date(),
+        updated_at: new Date(),
+        deleted_at: new Date()
+        
+    }];
+    return allEvents.find(event => event.id === parseInt(id, 10));
+}
+
 export default {
     prepare,
+    createOne,
     getAllByAdminId,
     getOne,
-    createOne
+    updateOne
 }
