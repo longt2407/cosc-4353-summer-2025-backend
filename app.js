@@ -30,6 +30,8 @@ app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth)
 
 // Volunteer - /volunteer/*
 app.post("/volunteer/login", volunteerController.login);
+app.post("/volunteer/register", volunteerController.register);
+app.get("volunteer/verify/:token", volunteerController.verify);
 
 // Admin - /admin/*
 app.post("/admin/login", adminController.login);

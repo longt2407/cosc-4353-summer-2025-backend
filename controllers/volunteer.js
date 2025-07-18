@@ -2,6 +2,7 @@ import volunteerModel from "../models/volunteer.js";
 import httpResp from "../helpers/httpResp.js";
 import { HttpError }  from "../helpers/error.js";
 import jwt from "../helpers/jwt.js";
+import volunteerVerificationModel from "../models/volunteerVerification.js";
 
 async function login(req, res) {
     let body = req.body;
@@ -22,6 +23,18 @@ async function login(req, res) {
     return httpResp.Success[200](req, res, volunteer);
 }
 
+async function register(req, res) {
+    let body = req.body;
+    await volunteerVerificationModel.createOne(body);
+    return httpResp.Success[200](req, res, null);
+}
+
+async function verify(req, res) {
+    
+}
+
 export default {
-    login
+    login,
+    register,
+    verify
 }
