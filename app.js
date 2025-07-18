@@ -31,10 +31,10 @@ app.patch("/test/echo/:message", testController.echoPatch);
 app.delete("/test/echo/:message", testController.echoDelete);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
-// Volunteer - /volunteer/*
-app.post("/volunteer/login", volunteerController.login);
+// Volunteer
 app.use("/volunteer/report/", volunteerRoutes);
 app.use("/volunteer/history/", volunteerHistoryRoutes);
+
 app.post("/volunteer/login", volunteerController.login);
 app.post("/volunteer/register", volunteerController.register);
 app.post("/volunteer/verify", volunteerController.verify);
@@ -56,11 +56,11 @@ app.patch("/admin/qa", auth.is(auth.ADMIN), adminController.updateQuestionAndAns
 app.get("/admin/profile", auth.is(auth.ADMIN), adminController.getProfile);
 app.patch("/admin/profile", auth.is(auth.ADMIN), adminController.updateProfile);
 
-// Event - /event/*
+// Event
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 
-// Notification - /notification/*
+// Notification
 app.use('/notification', notificationRoutes);
 
 // *
