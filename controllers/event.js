@@ -61,11 +61,20 @@ async function dropVolunteer(req, res) {
     return httpResp.Success[200](req, res, null);
 }
 
+async function getOneByAdminId(req, res) {
+    let adminId = req.jwt.user.id;
+    let eventId = utils.parseStr(req.params.id);
+    let event = await eventModel.getOneByAdminId(eventId, adminId);
+    eventModel.prepare(event);
+    return httpResp.Success[200](req, res, event);
+}
+
 export default {
     getAllByAdminId,
     createOne,
     updateOne,
     deleteOne,
     assignVolunteer,
-    dropVolunteer
+    dropVolunteer,
+    getOneByAdminId
 }
