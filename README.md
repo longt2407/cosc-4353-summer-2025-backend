@@ -31,3 +31,12 @@ In project directory, execute the following commands.
     ```sh
     http://localhost:[process.env.PORT]
     ```
+
+### How to test
+
+In project directory, execute the following command.
+
+```sh
+npm test
+```
+This will create a `coverage` folder in project's root directory. HTML report is located at `coverage/lcov-report/index.html`.
