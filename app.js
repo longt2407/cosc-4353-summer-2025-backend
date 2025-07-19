@@ -58,6 +58,7 @@ app.patch("/admin/profile", auth.is(auth.ADMIN), adminController.updateProfile);
 
 // Event
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);
+app.get("/event/:id", auth.is(auth.ADMIN), eventController.getOneByAdminId);
 app.post("/event", auth.is(auth.ADMIN), eventController.createOne);
 app.patch("/event/:id", auth.is(auth.ADMIN), eventController.updateOne); 
 app.delete("/event/:id", auth.is(auth.ADMIN), eventController.deleteOne);
