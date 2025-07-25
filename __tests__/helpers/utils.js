@@ -23,13 +23,28 @@ test("utils.timeout", () => {
 });
 
 test("utils.parseStr 1", () => {
-    const [val, e] = utils.parseStr("3");
+    const [val, e] = utils.parseStr(3);
     expect(val).toBe(3);
 });
 
 test("utils.parseStr 2", () => {
+    const [val, e] = utils.parseStr("3");
+    expect(val).toBe(3);
+});
+
+test("utils.parseStr 3", () => {
     const [val, e] = utils.parseStr("str");
     expect(val).toBe("str");
+});
+
+test("utils.parseStr 4", () => {
+    const [val, e] = utils.parseStr('"str"');
+    expect(val).toBe("str");
+});
+
+test("utils.parseStr 5", () => {
+    const [val, e] = utils.parseStr({});
+    expect(val).toEqual({});
 });
 
 test("utils.isNaN", () => {
