@@ -8,7 +8,8 @@ const ADMIN = 1;
 function is(...roles) {
     return (req, res, next) => {
         try {
-            let token =  (req.body && req.body.authorization) || req.headers["authorization"];
+            let token =  (req.body && req.body.authorization) 
+                || (req.headers && req.headers["authorization"]);
             if (!token) {
                 throw new HttpError({ statusCode: 401 });
             }
