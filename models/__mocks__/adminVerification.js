@@ -1,15 +1,26 @@
-const mockAdminVerification = {
+const mockAdminVerification = [{
     id: 1,
-    email: "admin@domain.com",
+    email: "admin101@domain.com",
     password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
     reset_password_question: "1 + 1 = ?",
     reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTU0MDg3MTgsImRhdGEiOnsiZW1haWwiOiJhZG1pbkBkb21haW4uY29tIn0sImlhdCI6MTc1MjgxNjcxOH0.nzjgtvGy7azvK3g_IwHGrc0pRn4IDyF8PEqm2SOpmsU",
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYyNzMxODksImRhdGEiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AZG9tYWluLmNvbSIsInJvbGUiOjF9LCJpYXQiOjE3NTM2ODExODl9.cqfBJUoaethUDys7ysZrr9opWwYQcwSrO5evcePsO78",
     is_deleted: false,
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: new Date()
-}
+}, {
+    id:2,
+    email: "admin102@domain.com",
+    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    reset_password_question: "1 + 1 = ?",
+    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYyNzM4MjAsImRhdGEiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AZG9tYWluLmNvbSIsInJvbGUiOjF9LCJpYXQiOjE3NTM2ODE4MjB9.4fQbSWYe8E66b9RTCbXLyxjTU0Fc9gnobmBlmNZHwb8",
+    is_deleted: false,
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: new Date()
+}]
 
 async function getOneByEmail(email) {
     let rows = mockAdminVerification.filter((vv) => {
@@ -26,8 +37,8 @@ async function getOneByToken(token) {
 }
 
 async function createOne(admin) {
-    // admin1@domain.com
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYyNzE1ODgsImRhdGEiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AZG9tYWluLmNvbSIsInJvbGUiOjF9LCJpYXQiOjE3NTM2Nzk1ODh9.G0bCo1QQOFwjXTCRNdmRcUO5aPiZjnkC7cgNAZYHBZs";
+    // admin102@domain.com
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYyNzU2MjksImRhdGEiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AZG9tYWluLmNvbSIsInJvbGUiOjF9LCJpYXQiOjE3NTM2ODM2Mjl9.BcIpwBo-M0wKIBNDNqbR5w427KUpfvf1ew-TAxy1mlk";
 }
 
 export default {
