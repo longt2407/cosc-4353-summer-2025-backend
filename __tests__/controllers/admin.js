@@ -71,7 +71,7 @@ test("adminController.forget", async () => {
     let req = {
         body: {
             email: "admin1@domain.com",
-            reset_password_answer: "123456",
+            reset_password_answer: "2",
             password: "654321"
         }
     };

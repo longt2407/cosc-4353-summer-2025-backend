@@ -37,8 +37,8 @@ async function getOneByToken(token) {
 }
 
 async function createOne(admin) {
-    // admin102@domain.com
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYyNzU2MjksImRhdGEiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AZG9tYWluLmNvbSIsInJvbGUiOjF9LCJpYXQiOjE3NTM2ODM2Mjl9.BcIpwBo-M0wKIBNDNqbR5w427KUpfvf1ew-TAxy1mlk";
+    // admin201@domain.com
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYzMzcxOTUsImRhdGEiOnsiZW1haWwiOiJhZG1pbjIwMUBkb21haW4uY29tIn0sImlhdCI6MTc1Mzc0NTE5NX0.tXkIdEdwxqM_gjFBjTXdZLzBI4r25UMrgH4CQSlC_Ws";
 }
 
 export default {
