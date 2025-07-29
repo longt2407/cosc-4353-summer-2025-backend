@@ -5,7 +5,7 @@ const config = {
 	coverageDirectory: "coverage",
 	testPathIgnorePatterns: [
 		"/node_modules/",
-		"<rootDir>/controllers/test.js"
+		"test.js"
 	]
 };
 
