@@ -13,6 +13,22 @@ let config = {
 
 const pool = mysql.createPool(config);
 
+// import { HttpError } from '../helpers/error.js';
+// async function modelFunc(conn, data) {
+//     ...
+//     await conn.query(..., [...]);
+//     ...
+//     throw new HttpError({ statusCode: 400 });
+//     ...
+// }
+// async function controllerFunc(req, res) {
+//     await tx(req, res, async (conn) => {
+//         ...
+//         await modelFunc(conn, data);
+//         ...
+//         return result;
+//     });
+// }
 async function tx(req, res, func) {
     try {
         var conn = await pool.getConnection();

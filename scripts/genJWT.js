@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 const JWT_SECRET = "secret";
-const data = {}
+const data = {};
 
 function sign() {
     // exp: 1 month
