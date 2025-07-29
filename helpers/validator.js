@@ -23,6 +23,14 @@ import { HttpError } from "../helpers/error.js";
 //             DataType.NOTNULL()
 //         ]
 // });
+// try {
+//     validator.validate({ x: 1, y: 2 });
+// } catch(e) {
+//     ...
+// }
+// if (validator.check({ x: 1, y: 2 }).error) {
+//     ...
+// }
 class Validator {
     validate(row) {
         for (let attr in this.config) {
