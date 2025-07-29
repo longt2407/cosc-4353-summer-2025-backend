@@ -29,7 +29,7 @@ CREATE TABLE `volunteer` (
     CONSTRAINT `volunteer-check-email` CHECK (`email` REGEXP '^.+@.+$'),
     CONSTRAINT `volunteer-check-full_name` CHECK ((CHAR_LENGTH(`first_name`) + CHAR_LENGTH(`middle_name`) + CHAR_LENGTH(`last_name`)) <= 50),
     CONSTRAINT `volunteer-check-address_state` CHECK (CHAR_LENGTH(`address_state`) = 2),
-    CONSTRAINT `volunteer-check-address_zip` CHECK (CHAR_LENGTH(`address_state`) IN (5, 9))
+    CONSTRAINT `volunteer-check-address_zip` CHECK (CHAR_LENGTH(`address_zip`) IN (5, 9))
 );
 
 DROP TABLE IF EXISTS `volunteer_verification`;
