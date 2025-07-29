@@ -3,7 +3,7 @@
 	"version": "1.0",
 	"type": "module",
 	"scripts": {
-		"dev": "nodemon app.js",
+		"dev": "nodemon server.js",
 		"test": "jest --silent"
 	},
 	"dependencies": {
@@ -20,6 +20,7 @@
 		"@babel/core": "^7.28.0",
 		"@babel/preset-env": "^7.28.0",
 		"babel-jest": "^30.0.4",
-		"jest": "^30.0.4"
+		"jest": "^30.0.4",
+		"supertest": "^7.1.4"
 	}
 }

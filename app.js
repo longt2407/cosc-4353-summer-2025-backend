@@ -15,7 +15,6 @@ import volunteerRoutes from "./routes/volunteerReport.js";
 import volunteerHistoryRoutes from "./routes/volunteerHistoryRoute.js";
 
 const app = express();
-const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -71,6 +70,4 @@ app.use('/notification', notificationRoutes);
 // *
 app.use(httpResp.Error[404]);
 
-app.listen(port, () => {
-    console.log(`server :: listening port ${port}`);
-});
+export default app;

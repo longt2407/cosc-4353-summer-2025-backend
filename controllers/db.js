@@ -9,7 +9,7 @@ let config = {
     password: process.env.DB_PASSWORD,
     connectionLimit : 20,
     decimalNumbers: true
-}
+};
 
 const pool = mysql.createPool(config);
 
