@@ -4,6 +4,15 @@
 
 - [Node.js](https://nodejs.org/en)
 
+#### Initialize Database (MySQL **8.0**)
+
+- Drop and create database (recommended):
+    ```
+    DROP DATABASE IF EXISTS `db-name`;
+    CREATE DATABASE `db-name`;
+    ```
+- Import `/scripts/db.sql`
+
 ### How to run
 
 In project directory, execute the following commands.
