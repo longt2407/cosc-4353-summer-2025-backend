@@ -4,7 +4,7 @@
 
 - [Node.js](https://nodejs.org/en)
 
-#### Initialize Database (MySQL **8.0**)
+### Initialize Database (MySQL **8.0**)
 
 - Drop and create database (recommended):
     ```
