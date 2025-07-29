@@ -37,7 +37,7 @@ const mockVolunteers = [{
     address_zip: "90000",
     skill: JSON.parse(JSON.stringify(["strong", "technology"])),
     preference: null,
-    availability: JSON.parse(JSON.stringify([TODAY + DAY_OFFSET, TODAY + 2 * DAY_OFFSET, TODAY + 2 * DAY_OFFSET])),
+    availability: JSON.parse(JSON.stringify([TODAY + DAY_OFFSET, TODAY + 2 * DAY_OFFSET, TODAY + 3 * DAY_OFFSET])),
     is_deleted: false,
     created_at: new Date(),
     updated_at: new Date(),
