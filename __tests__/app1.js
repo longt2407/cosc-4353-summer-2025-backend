@@ -29,6 +29,11 @@ test("delete /test/echo/:message", async () => {
     expect(response.statusCode).toBe(200);
 });
 
+test("get /test/db", async () => {
+    const response = await request(app).get("/test/db");
+    expect(response.statusCode).toBe(200);
+});
+
 test("post /test/auth", async () => {
     const response = await request(app).post("/test/auth").set("Authorization", VOLUNTEER_TOKEN);
     expect(response.statusCode).toBe(200);

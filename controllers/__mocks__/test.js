@@ -16,6 +16,10 @@ function echoDelete(req, res) {
     return httpResp.Success[200](req, res, {});
 }
 
+async function testDB(req, res) {
+    return httpResp.Success[200](req, res, {});
+}
+
 function auth(req, res) {
     return httpResp.Success[200](req, res, {});
 }
@@ -26,5 +30,6 @@ export default {
     echoPost,
     echoPatch,
     echoDelete,
+    testDB,
     auth
 }
