@@ -29,6 +29,24 @@ function echoDelete(req, res) {
     });
 }
 
+async function testDB(req, res) {
+    try {
+        var conn = await db.pool.getConnection();
+        await conn.beginTransaction();
+        await conn.commit();
+        httpResp.Success[200](req, res, {
+            message: "success"
+        });
+    } catch(e) {
+        conn && await conn.rollback();
+        httpResp.Success[200](req, res, {
+            message: `error - ${e.message}`
+        });
+    } finally {
+        conn && conn.release();
+    }
+}
+
 function auth(req, res) {
     return httpResp.Success[200](req, res, req.jwt);
 }
@@ -38,5 +56,6 @@ export default {
     echoPost,
     echoPatch,
     echoDelete,
+    testDB,
     auth
 }

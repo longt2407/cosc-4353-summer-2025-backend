@@ -28,6 +28,7 @@ app.get("/test/echo/:message", testController.echoGet);
 app.post("/test/echo/:message", testController.echoPost);
 app.patch("/test/echo/:message", testController.echoPatch);
 app.delete("/test/echo/:message", testController.echoDelete);
+app.get("/test/db", testController.testDB);
 app.post("/test/auth", auth.is(auth.ADMIN, auth.VOLUNTEER), testController.auth);
 
 // Volunteer
