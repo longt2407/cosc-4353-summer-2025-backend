@@ -3,6 +3,8 @@ import auth from "../helpers/auth.js";
 import Validator from "../helpers/validator.js";
 import DataType from "../helpers/dataType.js";
 import adminModel from "./admin.js";
+import { HttpError } from "../helpers/error.js";
+import moment from "moment";
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
@@ -21,7 +23,7 @@ const validator = new Validator({
         }), 
         DataType.NOTNULL()
     ],
-    date: [DataType.DATETIME()]
+    date: [DataType.DATETIME(), DataType.NOTNULL()]
 });
 
 const mockEventA = {
@@ -103,7 +105,7 @@ async function include(conn, rows) {
     const _include = async (obj) => {
         if (obj) {
             if (obj.admin_id) {
-                obj.admin = await adminModel.getOne(obj.admin_id);
+                obj.admin = await adminModel.getOne(conn, obj.admin_id);
             }
         }
     }
@@ -157,17 +159,26 @@ async function getAllByAdminId(conn, admin_id){
     let sql = "SELECT * FROM event WHERE admin_id = ? AND is_deleted = ?";
     let params = [data.admin_id, false];
     const [rows] = await conn.query(sql, params);
+    await include(conn, rows);
+    parse(rows);
     return rows;
 }
 
-async function getOne(id) {
+async function getOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
     // get event
-    return mockEventA;
+    let sql = "SELECT * FROM event WHERE id = ? AND is_deleted = ?";
+    let params = [data.id, false];
+    const [rows] = await conn.query(sql, params);
+    if (rows[0]) {
+        await include(conn, rows);
+        parse(rows);
+    }
+    return rows[0] || null;
 }
 
-async function createOne(event) {
+async function createOne(conn, event) {
     let data = utils.objectAssign([
         "admin_id", 
         "name",
@@ -178,9 +189,17 @@ async function createOne(event) {
         "date"
     ], event);
     validator.validate(data);
+    data.date = new Date(data.date);
+    let now = new Date();
+    if (moment(data.date).isAfter(moment(now), "day")) {
+        throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
+    }
+    stringify(data);
     // create event
-    let eventId = 1;
-    return eventId;
+    let sql = "INSERT INTO event (admin_id, name, description, location, skill, urgency, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    let params = [data.admin_id, data.name, data.description, data.location, data.skill, data.urgency, data.date];
+    const [rows] = await conn.query(sql, params);
+    return rows.insertId;
 }
 
 async function updateOne(id, newEvent) {
