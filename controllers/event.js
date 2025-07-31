@@ -14,12 +14,14 @@ async function getAllByAdminId(req, res){
 }
 
 async function createOne(req, res) {
-    let body = req.body;
-    body.admin_id = req.jwt.user.id;
-    let eventId = await eventModel.createOne(body);
-    let event = await eventModel.getOne(eventId)
-    eventModel.prepare(event);
-    return httpResp.Success[200](req, res, event);
+    await db.tx(req, res, async (conn) => {
+        let body = req.body;
+        body.admin_id = req.jwt.user.id;
+        let eventId = await eventModel.createOne(conn, body);
+        let data = await eventModel.getOne(conn, eventId)
+        eventModel.prepare(data);
+        return data;
+    });
 }
 
 async function updateOne(req,res) {
