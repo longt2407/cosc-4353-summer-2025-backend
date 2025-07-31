@@ -127,14 +127,14 @@ test("dataType.STRING - error 2", () => {
 });
 
 test("dataType.DATETIME 1", () => {
-    let today = (new Date()).getTime();
+    let today = (new Date()).toISOString();
     let validator = DataType.DATETIME();
     let result = validator.check(today);
     expect(result.error).toBe(undefined);
 });
 
 test("dataType.DATETIME 2", () => {
-    let today = (new Date()).getTime();
+    let today = (new Date()).toISOString();
     let validator = DataType.DATETIME({
         check: (val) => {
             if (val !== today) {
@@ -148,15 +148,22 @@ test("dataType.DATETIME 2", () => {
     expect(result.error).toBe(undefined);
 });
 
-test("dataType.DATETIME - error", () => {
-    let today = (new Date()).getTime();
+test("dataType.DATETIME - error 1", () => {
+    let today = new Date();
     let validator = DataType.DATETIME();
-    let result = validator.check(today.toString());
+    let result = validator.check(today.getTime());
     expect(result.error).not.toBe(undefined);
 });
 
 test("dataType.DATETIME - error 2", () => {
-    let today = (new Date()).getTime();
+    let validator = DataType.DATETIME();
+    let result = validator.check("invalid date");
+    expect(result.error).not.toBe(undefined);
+});
+
+test("dataType.DATETIME - error 3", () => {
+    let today = new Date();
+    let yesterday = new Date(today.getDate() - 1).toISOString();
     let validator = DataType.DATETIME({
         check: (val) => {
             if (val !== today) {
@@ -166,7 +173,7 @@ test("dataType.DATETIME - error 2", () => {
             }
         }
     });
-    let result = validator.check(today + 1);
+    let result = validator.check(yesterday);
     expect(result.error).not.toBe(undefined);
 });
 

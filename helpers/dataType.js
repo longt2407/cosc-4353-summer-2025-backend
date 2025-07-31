@@ -66,8 +66,14 @@ class STRING {
 
 class DATETIME {
     check(val) {
-        // val must be in milliseconds
-        if (val && utils.isNaN(val)) {
+        // val should be in ISO8601 format
+        if (val && typeof val !== "string") {
+            return {
+                error: new Error("invalid")
+            };
+        }
+        let d = new Date(val);
+        if (val && !(d instanceof Date) || utils.isNaN(d.getTime())) {
             return {
                 error: new Error("invalid")
             };
