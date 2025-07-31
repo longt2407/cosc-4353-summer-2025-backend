@@ -103,7 +103,7 @@ async function include(conn, rows) {
     const _include = async (obj) => {
         if (obj) {
             if (obj.admin_id) {
-                obj.admin = await adminModel.getOne(obj.admin_id);
+                obj.admin = await adminModel.getOne(conn, obj.admin_id);
             }
         }
     }
@@ -160,11 +160,18 @@ async function getAllByAdminId(conn, admin_id){
     return rows;
 }
 
-async function getOne(id) {
+async function getOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
     // get event
-    return mockEventA;
+    let sql = "SELECT * FROM event WHERE id = ? AND is_deleted = ?";
+    let params = [data.id, false];
+    const [rows] = await conn.query(sql, params);
+    if (rows[0]) {
+        await include(conn, rows);
+        parse(rows);
+    }
+    return rows[0] || null;
 }
 
 async function createOne(event) {
