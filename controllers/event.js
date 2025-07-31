@@ -2,12 +2,14 @@ import eventModel from "../models/event.js";
 import volunteerEventModel from "../models/volunteerEvent.js";
 import httpResp from "../helpers/httpResp.js";
 import utils from "../helpers/utils.js";
+import db from "./db.js";
 
 async function getAllByAdminId(req, res){
-    let adminId = req.jwt.user.id;
-    let events = await eventModel.getAllByAdminId(adminId);
-    eventModel.prepare(events);
-    return httpResp.Success[200](req, res, events);
+    await db.tx(req, res, async (conn) => {
+        let adminId = req.jwt.user.id
+        let data = await eventModel.getAllByAdminId(conn, adminId);
+        return data;
+    });
 }
 
 async function createOne(req, res) {

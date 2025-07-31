@@ -100,6 +100,24 @@ function prepare(rows) {
     }
 }
 
+async function getAllByAdminId(conn, admin_id){
+    let data = utils.objectAssign(["admin_id"], { admin_id });
+    validator.validate(data);
+    // get events
+    let sql = "SELECT * FROM event WHERE admin_id = ?";
+    let params = [admin_id];
+    const [rows] = await conn.query(sql, params);
+    prepare(rows);
+    return rows;
+}
+
+async function getOne(id) {
+    let data = utils.objectAssign(["id"], { id });
+    validator.validate(data);
+    // get event
+    return mockEventA;
+}
+
 async function createOne(event) {
     let data = utils.objectAssign([
         "admin_id", 
@@ -114,20 +132,6 @@ async function createOne(event) {
     // create event
     let eventId = 1;
     return eventId;
-}
-
-async function getAllByAdminId(admin_id){
-    let data = utils.objectAssign(["admin_id"], { admin_id });
-    validator.validate(data);
-    // get events
-    return [mockEventA, mockEventB];
-}
-
-async function getOne(id) {
-    let data = utils.objectAssign(["id"], { id });
-    validator.validate(data);
-    // get event
-    return mockEventA;
 }
 
 async function updateOne(id, newEvent) {
@@ -168,9 +172,9 @@ async function getOneByAdminId(id, admin_id) {
 export default {
     validator,
     prepare,
-    createOne,
     getAllByAdminId,
     getOne,
+    createOne,
     updateOne,
     deleteOne,
     getOneByAdminId
