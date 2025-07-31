@@ -4,7 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "nodemon server.js",
-		"test": "jest --silent"
+		"test:silent": "jest --silent",
+		"test": "jest"
 	},
 	"dependencies": {
 		"bcrypt": "^6.0.0",

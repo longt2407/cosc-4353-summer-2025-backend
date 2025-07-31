@@ -46,6 +46,12 @@ In project directory, execute the following commands.
 In project directory, execute the following command.
 
 ```sh
-npm test
+npm run test
 ```
+or 
+```sh 
+npm run test:silent
+``` 
+to to hide console output during test runs.
+
 This will create a `coverage` folder in project's root directory. HTML report is located at `coverage/lcov-report/index.html`.
