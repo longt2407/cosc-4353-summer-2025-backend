@@ -2,6 +2,7 @@ import utils from "../helpers/utils.js";
 import auth from "../helpers/auth.js";
 import Validator from "../helpers/validator.js";
 import DataType from "../helpers/dataType.js";
+import adminModel from "./admin.js";
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
@@ -85,9 +86,7 @@ function prepare(rows) {
     const _prepare = (obj) => {
         if (obj) {
             if (obj.admin) {
-                delete obj.admin.password;
-                delete obj.admin.reset_password_answer;
-                obj.admin.role = auth.ADMIN;
+                adminModel.prepare(obj.admin);
             }
         }
     }
@@ -100,14 +99,64 @@ function prepare(rows) {
     }
 }
 
+async function include(conn, rows) {
+    const _include = async (obj) => {
+        if (obj) {
+            if (obj.admin_id) {
+                obj.admin = await adminModel.getOne(obj.admin_id);
+            }
+        }
+    }
+    if (!Array.isArray(rows)) {
+        await _include(rows);
+    } else {
+        for (let row of rows) {
+            await _include(row);
+        }
+    }
+}
+
+function parse(rows) {
+    const _parse = (obj) => {
+        if (obj) {
+            if (obj.skill) {
+                obj.skill = JSON.parse(obj.skill);
+            }
+        }
+    }
+    if (!Array.isArray(rows)) {
+        _parse(rows);
+    } else {
+        for (let row of rows) {
+            _parse(row);
+        }
+    }
+}
+
+function stringify(rows) {
+    const _stringify = (obj) => {
+        if (obj) {
+            if (obj.skill) {
+                obj.skill = JSON.stringify(obj.skill);
+            }
+        }
+    }
+    if (!Array.isArray(rows)) {
+        _stringify(rows);
+    } else {
+        for (let row of rows) {
+            _stringify(row);
+        }
+    }
+}
+
 async function getAllByAdminId(conn, admin_id){
     let data = utils.objectAssign(["admin_id"], { admin_id });
     validator.validate(data);
     // get events
-    let sql = "SELECT * FROM event WHERE admin_id = ?";
-    let params = [admin_id];
+    let sql = "SELECT * FROM event WHERE admin_id = ? AND is_deleted = ?";
+    let params = [data.admin_id, false];
     const [rows] = await conn.query(sql, params);
-    prepare(rows);
     return rows;
 }
 
@@ -162,11 +211,18 @@ async function deleteOne(id) {
     return 1;
 }
 
-async function getOneByAdminId(id, admin_id) {
+async function getOneByAdminId(conn, id, admin_id) {
     let data = utils.objectAssign(["id", "admin_id"], { id, admin_id });
     validator.validate(data);
     // get event
-    return mockEventA;
+    let sql = "SELECT * FROM event WHERE id = ? AND admin_id = ? AND is_deleted = ?";
+    let params = [data.id, data.admin_id, false];
+    let [rows] = await conn.query(sql, params);
+    if (rows[0]) {
+        await include(conn, rows);
+        parse(rows);
+    }
+    return rows[0] || null;
 }
 
 export default {

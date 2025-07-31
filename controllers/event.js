@@ -8,6 +8,7 @@ async function getAllByAdminId(req, res){
     await db.tx(req, res, async (conn) => {
         let adminId = req.jwt.user.id
         let data = await eventModel.getAllByAdminId(conn, adminId);
+        eventModel.prepare(data);
         return data;
     });
 }
@@ -64,11 +65,13 @@ async function dropVolunteer(req, res) {
 }
 
 async function getOneByAdminId(req, res) {
-    let adminId = req.jwt.user.id;
-    let eventId = utils.parseStr(req.params.id);
-    let event = await eventModel.getOneByAdminId(eventId, adminId);
-    eventModel.prepare(event);
-    return httpResp.Success[200](req, res, event);
+    await db.tx(req, res, async (conn) => {
+        let adminId = req.jwt.user.id
+        let [eventId] = utils.parseStr(req.params.id);
+        let data = await eventModel.getOneByAdminId(conn, eventId, adminId);
+        eventModel.prepare(data);
+        return data;
+    });
 }
 
 export default {
