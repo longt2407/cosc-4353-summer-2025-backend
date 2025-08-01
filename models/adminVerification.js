@@ -65,8 +65,20 @@ async function createOne(conn, admin) {
     });
     if (adminVerification) {
         const [rows] = await conn.query(
-            'UPDATE `admin_verification` SET token = ? WHERE `id` = ? AND `is_deleted` = ?',
-            [token, adminVerification.id, false]
+            'UPDATE `admin_verification` SET '
+            + '`password` = ?, ' 
+            + '`token` = ?, '
+            + '`reset_password_question` = ?, '
+            + '`reset_password_answer` = ?, '
+            + 'WHERE `id` = ? AND `is_deleted` = ?',
+            [
+                data.password,
+                token,
+                data.reset_password_question,
+                data.reset_password_answer,
+                adminVerification.id, 
+                false
+            ]
         );
         return token;
     } else {
