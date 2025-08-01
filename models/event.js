@@ -149,6 +149,9 @@ async function updateOne(conn, newEvent) {
     if (!oldEvent) {
         throw new HttpError({statusCode: 400, message: `Event not found.`});
     }
+    if (oldEvent.admin_id !=  newEvent.admin_id){
+        throw new HttpError({statusCode: 401});
+    }
     let data = utils.objectAssign([
         "id",
         "admin_id",
@@ -173,13 +176,24 @@ async function updateOne(conn, newEvent) {
     return data.id;
 }
 
-async function deleteOne(conn, id) {
-    let data = utils.objectAssign(["id"], { id });
+async function deleteOne(conn, id, admin_id) {
+    let data = utils.objectAssign(["id", "admin_id"], { id, admin_id });
     validator.validate(data);
+    // check if event exist and admin valid
+    let sql_0 = "SELECT * from event WHERE id = ?";
+    let params_0 = [data.id];
+    const [rows_0] = await conn.query(sql_0, params_0);
+    if (!rows_0[0]){
+        throw new HttpError({statusCode: 400, message: `Event not found.`});
+    }
+    if (rows_0[0].admin_id != data.admin_id){
+        throw new HttpError({statusCode: 401});
+    }
+    // make sure there is no assigned volunteer in the event
     let sql_1 = "SELECT COUNT(*) as cnt FROM volunteer_event WHERE event_id = ? AND is_deleted = ?";
     let params_1 = [data.id, false];
-    const [rows] = await conn.query(sql_1, params_1);
-    if (rows[0].cnt > 0) {
+    const [rows_1] = await conn.query(sql_1, params_1);
+    if (rows_1[0].cnt > 0) {
         throw new HttpError({ statusCode: 400, message: "Cannot delete event. You must drop all volunteers before deleting."});
     }
     // delete volunteer_event table
