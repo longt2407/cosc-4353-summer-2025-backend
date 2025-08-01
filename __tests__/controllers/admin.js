@@ -1,6 +1,7 @@
 import adminController from "../../controllers/admin.js";
 
 jest.mock('../../helpers/jwt.js');
+jest.mock('../../controllers/db.js');
 jest.mock('../../models/admin.js');
 jest.mock('../../models/adminVerification.js');
 
@@ -17,6 +18,21 @@ test("adminController.login", async () => {
     };
     let data = await adminController.login(req, res);
     expect(res.statusCode).toBe(200);
+});
+
+test("adminController.login - error", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com",
+            password: "123456"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.login(req, res);
+    expect(res.statusCode).not.toBe(200);
 });
 
 test("adminController.register", async () => {
@@ -49,7 +65,7 @@ test("adminController.verify", async () => {
         setHeader: jest.fn().mockReturnThis(),
         end: jest.fn().mockReturnThis()
     };
-    let data = await adminController.register(req, res);
+    let data = await adminController.verify(req, res);
     expect(res.statusCode).toBe(200);
 });
 
@@ -67,6 +83,20 @@ test("adminController.getQuestion", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+test("adminController.getQuestion - error", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.getQuestion(req, res);
+    expect(res.statusCode).not.toBe(200);
+});
+
 test("adminController.forget", async () => {
     let req = {
         body: {
@@ -81,6 +111,22 @@ test("adminController.forget", async () => {
     };
     let data = await adminController.forget(req, res);
     expect(res.statusCode).toBe(200);
+});
+
+test("adminController.forget", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com",
+            reset_password_answer: "2",
+            password: "654321"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.forget(req, res);
+    expect(res.statusCode).not.toBe(200);
 });
 
 test("adminController.updatePassword", async () => {

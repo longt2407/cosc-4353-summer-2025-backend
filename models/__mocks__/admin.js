@@ -1,5 +1,3 @@
-const TODAY = (new Date()).getTime();
-const DAY_OFFSET = 1 * 24 * 60 * 60 * 1000;
 const mockAdmin = [{
     id: 1,
     email: "admin1@domain.com",
@@ -28,47 +26,47 @@ const mockAdmin = [{
     deleted_at: new Date()
 }]
 
-async function getOneByEmail(email) {
+async function getOneByEmail(conn, email) {
     let rows = mockAdmin.filter((v) => {
         return v.email === email
     })
     return rows[0] || null;
 }
 
-async function getOneByEmailAndPwd(email, password) {
+async function getOneByEmailAndPwd(conn, email, password) {
     let rows = mockAdmin.filter((v) => {
         return v.email === email && password === "123456";
     })
     return rows[0] || null;
 }
 
-async function createOneWithToken(admin) {
+async function createOneWithToken(conn, admin) {
     return 101;
 }
 
-async function getOne(id) {
+async function getOne(conn, id) {
     let rows = mockAdmin.filter((v) => {
         return v.email === id;
     })
     return rows[0] || null;
 }
 
-async function getOneByEmailAndAnswer(email, answer) {
+async function getOneByEmailAndAnswer(conn, email, answer) {
     let rows = mockAdmin.filter((v) => {
         return v.email === email && answer === "2";
     })
     return rows[0] || null;
 }
 
-async function updatePassword(id, password) {
+async function updatePassword(conn, id, password) {
     return 1;
 }
 
-async function updateQuestionAndAnswer(id, reset_password_question, reset_password_answer) {
+async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_password_answer) {
     return 1;
 }
 
-async function updateOne(newAdmin) {
+async function updateOne(conn, newAdmin) {
     return 1;
 }
 export default {

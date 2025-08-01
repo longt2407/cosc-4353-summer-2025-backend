@@ -22,21 +22,21 @@ const mockAdminVerification = [{
     deleted_at: new Date()
 }]
 
-async function getOneByEmail(email) {
+async function getOneByEmail(conn, email) {
     let rows = mockAdminVerification.filter((vv) => {
         return vv.email === email;
     });
     return rows[0] || null;
 }
 
-async function getOneByToken(token) {
+async function getOneByToken(conn, token) {
     let rows = mockAdminVerification.filter((vv) => {
         return vv.token === token;
     });
     return rows[0] || null;
 }
 
-async function createOne(admin) {
+async function createOne(conn, admin) {
     // admin201@domain.com
     return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTYzMzcxOTUsImRhdGEiOnsiZW1haWwiOiJhZG1pbjIwMUBkb21haW4uY29tIn0sImlhdCI6MTc1Mzc0NTE5NX0.tXkIdEdwxqM_gjFBjTXdZLzBI4r25UMrgH4CQSlC_Ws";
 }

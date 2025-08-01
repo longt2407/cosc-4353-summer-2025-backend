@@ -7,24 +7,10 @@ import { HttpError } from "../helpers/error.js";
 import jwt from "../helpers/jwt.js";
 import pwd from "../helpers/pwd.js";
 
-const mockAdmin = {
-    id: 1,
-    email: "admin@domain.com",
-    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    reset_password_question: "1 + 1 = ?",
-    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    first_name: "Admin",
-    middle_name: null,
-    last_name: "Account",
-    is_deleted: false,
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: new Date()
-};
-
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
-    email: [DataType.STRING({
+    email: [
+        DataType.STRING({
             check: (val) => {
                 if (!(/^.+@.+$/.test(val))) {
                     return { error: new Error("invalid") };
@@ -45,6 +31,7 @@ function prepare(rows) {
     const _prepare = (obj) => {
         if (obj) {
             delete obj.password;
+            delete obj.reset_password_question;
             delete obj.reset_password_answer;
             obj.role = auth.ADMIN;
         }
@@ -58,21 +45,27 @@ function prepare(rows) {
     }
 }
 
-async function getOneByEmail(email) {
+async function getOneByEmail(conn, email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
-    return mockAdmin;
+    const [rows] = await conn.query(
+        'SELECT * FROM `admin` WHERE `email` = ? AND `is_deleted` = ?',
+        [data.email, false]
+    );
+    return rows[0] || null;
 }
 
-async function getOneByEmailAndPwd(email, password) {
+async function getOneByEmailAndPwd(conn, email, password) {
     let data = utils.objectAssign(["email", "password"], { email, password });
     validator.validate(data);
-    let admin = await getOneByEmail(data.email);
-    // if (admin && await pwd.compare(data.password, admin.password)) {}
-    return mockAdmin;
+    let admin = await getOneByEmail(conn, data.email);
+    if (admin && await pwd.compare(data.password, admin.password)) {
+        return admin;
+    }
+    return null;
 }
 
-async function createOneWithToken(admin) {
+async function createOneWithToken(conn, admin) {
     let data = utils.objectAssign([
         "token",
         "first_name",
@@ -86,44 +79,74 @@ async function createOneWithToken(admin) {
     } catch (e) {
         throw new HttpError({ statusCode: 400, message: `Invalid token.`});
     }
-    let adminVerification = await adminVerificationModel.getOneByToken(data.token);
+    let adminVerification = await adminVerificationModel.getOneByToken(conn, data.token);
     if (!adminVerification) {
         throw new HttpError({ statusCode: 400, message: `Invalid token.`});
     }
-    // create
-    return 1;
+    let existedAdmin = await getOneByEmail(conn, adminVerification.email);
+    if (existedAdmin) {
+        throw new HttpError({statusCode: 400, message: `This email is registered.`});
+    }
+    const [rows] = await conn.query(
+        'INSERT INTO `admin`('
+        + '`email`, '
+        + '`password`, '
+        + '`reset_password_question`, '
+        + '`reset_password_answer`, '
+        + '`first_name`, '
+        + '`middle_name`, '
+        + '`last_name` '
+        + ') VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [
+            adminVerification.email, 
+            adminVerification.password, 
+            adminVerification.reset_password_question, 
+            adminVerification.reset_password_answer,
+            data.first_name,
+            data.middle_name,
+            data.last_name
+        ]
+    );
+    await adminVerificationModel.deleteOneByToken(conn, data.token);
+    return rows.insertId;
 }
 
-async function getOne(id) {
+async function getOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
-    // get
-    return mockAdmin;
+    const [rows] = await conn.query(
+        'SELECT * FROM `admin` WHERE `id` = ? AND `is_deleted` = ?',
+        [data.id, false]
+    );
+    return rows[0] || null;
 }
 
-async function getOneByEmailAndAnswer(email, answer) {
+async function getOneByEmailAndAnswer(conn, email, answer) {
     let data = utils.objectAssign(["email", "answer"], { email, answer });
     validator.validate(data);
-    let admin = await getOneByEmail(data.email);
+    let admin = await getOneByEmail(conn, data.email);
     if (admin && await pwd.compare(answer, admin.reset_password_answer)) {
-        return mockAdmin;
+        return admin;
     }
     return null;
 }
 
-async function updatePassword(id, password) {
+async function updatePassword(conn, id, password) {
     let data = utils.objectAssign(["id", "password"], { id, password });
     validator.validate(data);
-    let admin = await getOne(data.id);
+    let admin = await getOne(conn, data.id);
     if (!admin) {
-        throw new HttpError({statusCode: 400, message: `Admin not found.`});
+        throw new HttpError({ statusCode: 400, message: `Admin not found.` });
     }
     data.password = await pwd.hash(data.password);
-    // update
-    return 1;
+    const [rows] = await conn.query(
+        'UPDATE `admin` SET password = ? WHERE `id` = ? AND `is_deleted` = ?',
+        [data.password, data.id, false]
+    );
+    return data.id;
 }
 
-async function updateQuestionAndAnswer(id, reset_password_question, reset_password_answer) {
+async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_password_answer) {
     let data = utils.objectAssign([
         "id", 
         "reset_password_question", 
@@ -135,12 +158,15 @@ async function updateQuestionAndAnswer(id, reset_password_question, reset_passwo
     });
     validator.validate(data);
     data.reset_password_answer = await pwd.hash(data.reset_password_answer);
-    // update
-    return 1;
+    const [rows] = await conn.query(
+        'UPDATE `admin` SET `reset_password_question` = ?, `reset_password_answer` = ? WHERE `id` = ? AND `is_deleted` = ?',
+        [data.reset_password_question, data.reset_password_answer, data.id, false]
+    );
+    return data.id;
 }
 
-async function updateOne(newAdmin) {
-    let oldAdmin = await getOne(newAdmin.id);
+async function updateOne(conn, newAdmin) {
+    let oldAdmin = await getOne(conn, newAdmin.id);
     if (!oldAdmin) {
         throw new HttpError({statusCode: 400, message: `Admin not found.`});
     }
@@ -155,7 +181,20 @@ async function updateOne(newAdmin) {
         newAdmin
     );
     validator.validate(data);
-    // update
+    const [rows] = await conn.query(
+        'UPDATE `admin` SET'
+        + '`first_name` = ?, '
+        + '`middle_name` = ?, '
+        + '`last_name` = ? '
+        + 'WHERE `id` = ? AND `is_deleted` = ?',
+        [
+            data.first_name,
+            data.middle_name,
+            data.last_name,
+            data.id,
+            false
+        ]
+    );
     return data.id;
 }
 
