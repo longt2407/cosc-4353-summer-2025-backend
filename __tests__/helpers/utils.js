@@ -2,6 +2,7 @@ import utils from "../../helpers/utils.js";
 jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
 
+// objectAssign
 test("utils.objectAssign", () => {
     let obj = utils.objectAssign(
         ["x", "y", "z", "t", "s"], 
@@ -16,12 +17,14 @@ test("utils.objectAssign", () => {
     });
 });
 
+// timeout
 test("utils.timeout", () => {
     utils.timeout(100);
     expect(setTimeout).toHaveBeenCalledTimes(1);
     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 100);
 });
 
+// parseStr
 test("utils.parseStr 1", () => {
     const [val, e] = utils.parseStr(3);
     expect(val).toBe(3);
@@ -47,6 +50,7 @@ test("utils.parseStr 5", () => {
     expect(val).toEqual({});
 });
 
+// isNaN
 test("utils.isNaN", () => {
     expect(utils.isNaN("3")).toBe(true);
 });

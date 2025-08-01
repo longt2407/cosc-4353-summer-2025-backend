@@ -1,5 +1,6 @@
 import DataType from "../../helpers/dataType.js";
 
+// ARRAY
 test("dataType.ARRAY 1", () => {
     let validator = DataType.ARRAY(DataType.NUMBER());
     let result = validator.check([1, 2]);
@@ -46,6 +47,7 @@ test("dataType.ARRAY - error 2", () => {
     expect(result.error).not.toBe(undefined);
 });
 
+// NUMBER
 test("dataType.NUMBER 1", () => {
     let validator = DataType.NUMBER();
     let result = validator.check(1);
@@ -86,6 +88,7 @@ test("dataType.NUMBER - error 2", () => {
     expect(result.error).not.toBe(undefined);
 });
 
+// STRING
 test("dataType.STRING 1", () => {
     let validator = DataType.STRING();
     let result = validator.check("str");
@@ -126,6 +129,7 @@ test("dataType.STRING - error 2", () => {
     expect(result.error).not.toBe(undefined);
 });
 
+// DATETIME
 test("dataType.DATETIME 1", () => {
     let today = (new Date()).toISOString();
     let validator = DataType.DATETIME();
@@ -177,12 +181,14 @@ test("dataType.DATETIME - error 3", () => {
     expect(result.error).not.toBe(undefined);
 });
 
+// ANY
 test("dataType.ANY", () => {
     let validator = DataType.ANY();
     let result = validator.check("abc");
     expect(result.error).toBe(undefined);
 });
 
+// NOT NULL
 test("dataType.NOTNULL", () => {
     let validator = DataType.NOTNULL();
     let result = validator.check("abc");

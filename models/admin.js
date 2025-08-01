@@ -85,7 +85,7 @@ async function createOneWithToken(conn, admin) {
     }
     let existedAdmin = await getOneByEmail(conn, adminVerification.email);
     if (existedAdmin) {
-        throw new HttpError({statusCode: 400, message: `This email is registered.`});
+        throw new HttpError({ statusCode: 400, message: `This email is registered.` });
     }
     const [rows] = await conn.query(
         'INSERT INTO `admin`('

@@ -20,7 +20,7 @@ const mockAdminVerification = [{
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: new Date()
-}]
+}];
 
 async function getOneByEmail(conn, email) {
     let rows = mockAdminVerification.filter((vv) => {

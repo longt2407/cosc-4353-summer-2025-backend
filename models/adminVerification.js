@@ -63,7 +63,13 @@ async function createOne(conn, admin) {
     let token = jwt.sign({
         email: data.email,
     });
-    if (!adminVerification) {
+    if (adminVerification) {
+        const [rows] = await conn.query(
+            'UPDATE `admin_verification` SET token = ? WHERE `id` = ? AND `is_deleted` = ?',
+            [token, adminVerification.id, false]
+        );
+        return token;
+    } else {
         const [rows] = await conn.query(
             'INSERT INTO `admin_verification`('
             + '`email`, ' 
@@ -73,13 +79,6 @@ async function createOne(conn, admin) {
             + '`reset_password_answer` '
             + ') VALUES (?, ?, ?, ?, ?)',
             [data.email, data.password, token, data.reset_password_question, data.reset_password_answer]
-        );
-        return token;
-    }
-    if (adminVerification) {
-        const [rows] = await conn.query(
-            'UPDATE `admin_verification` SET token = ? WHERE `id` = ? AND `is_deleted` = ?',
-            [token, adminVerification.id, false]
         );
         return token;
     }
