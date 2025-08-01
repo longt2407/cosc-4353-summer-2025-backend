@@ -3,6 +3,7 @@ import app from "../app.js";
 
 jest.mock("../controllers/test.js");
 jest.mock("../controllers/volunteer.js");
+jest.mock("../controllers/admin.js");
 jest.mock("../helpers/jwt.js");
 
 const VOLUNTEER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTUzMjExMjIsImRhdGEiOnsiaWQiOjEsImVtYWlsIjoidm9sdW50ZWVyQGRvbWFpbi5jb20iLCJyb2xlIjowfSwiaWF0IjoxNzUyNzI5MTIyfQ.bwCUxnpYuwGoqQwtLxD3Wenv3DqfQw1_hkwCBo_zsA0";
@@ -82,5 +83,51 @@ test("get /volunteer/profile", async () => {
 
 test("patch /volunteer/profile", async () => {
     const response = await request(app).patch("/volunteer/profile").set("Authorization", VOLUNTEER_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+// Admin
+test("post /admin/login", async () => {
+    const response = await request(app).post("/admin/login");
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /admin/register", async () => {
+    const response = await request(app).post("/admin/register");
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /admin/verify", async () => {
+    const response = await request(app).post("/admin/verify");
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /admin/forget/question", async () => {
+    const response = await request(app).post("/admin/forget/question");
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /admin/forget", async () => {
+    const response = await request(app).post("/admin/forget");
+    expect(response.statusCode).toBe(200);
+});
+
+test("patch /admin/password", async () => {
+    const response = await request(app).patch("/admin/password").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("patch /admin/qa", async () => {
+    const response = await request(app).patch("/admin/qa").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("get /admin/profile", async () => {
+    const response = await request(app).get("/admin/profile").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("patch /admin/profile", async () => {
+    const response = await request(app).patch("/admin/profile").set("Authorization", ADMIN_TOKEN);
     expect(response.statusCode).toBe(200);
 });

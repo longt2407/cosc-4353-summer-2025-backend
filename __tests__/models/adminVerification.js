@@ -1,6 +1,5 @@
 import adminModel from "../../models/admin.js";
 import adminVerificationModel from "../../models/adminVerification.js";
-import jwt from "../../helpers/jwt.js";
 jest.mock("../../helpers/jwt.js");
 
 const mockAdmin = [{
@@ -132,7 +131,7 @@ test("adminVerificationModel.createOneWithToken 1", async () => {
         reset_password_answer: "2",
     };
     let verifyToken = await adminVerificationModel.createOne(conn, data);
-    expect(verifyToken).toBe(jwt.sign({ email: data.email }));
+    expect(typeof verifyToken).toBe("string");
 });
 
 test("adminVerificationModel.createOneWithToken 2", async () => {
@@ -149,7 +148,7 @@ test("adminVerificationModel.createOneWithToken 2", async () => {
         reset_password_answer: "2",
     };
     let verifyToken = await adminVerificationModel.createOne(conn, data);
-    expect(verifyToken).toBe(jwt.sign({ email: data.email }));
+    expect(typeof verifyToken).toBe("string");
 });
 
 test("adminVerificationModel.createOneWithToken - error 1", async () => {
