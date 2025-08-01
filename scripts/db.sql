@@ -127,22 +127,6 @@ CREATE TABLE `notification` (
     CONSTRAINT `notification-fk-volunteer_id-volunteer-id` FOREIGN KEY (`volunteer_id`) REFERENCES `volunteer`(`id`)
 );
 
-DROP TABLE IF EXISTS notification;
-CREATE TABLE notification (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    volunteer_id INT NOT NULL,
-    type INT DEFAULT 0, -- 0: info, 1: success, 2: warning, 3: error
-    title LONGTEXT NOT NULL,
-    message LONGTEXT,
-    status INT NOT NULL DEFAULT 0, -- 0: unread, 1: read
-    is_deleted BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL DEFAULT NULL,
-
-    FOREIGN KEY (volunteer_id) REFERENCES volunteer(id)
-);
-
 -- Enable FOREIGN KEY check
 
 SET FOREIGN_KEY_CHECKS = 1;
