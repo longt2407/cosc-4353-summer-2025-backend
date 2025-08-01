@@ -1,6 +1,7 @@
 import volunteerController from "../../controllers/volunteer.js";
 
 jest.mock('../../helpers/jwt.js');
+jest.mock('../../controllers/db.js');
 jest.mock('../../models/volunteer.js');
 jest.mock('../../models/volunteerVerification.js');
 
@@ -18,6 +19,21 @@ test("volunteerController.login", async () => {
     };
     let data = await volunteerController.login(req, res);
     expect(res.statusCode).toBe(200);
+});
+
+test("volunteerController.login", async () => {
+    let req = {
+        body: {
+            email: "volunteer10@domain.com",
+            password: "123456"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.login(req, res);
+    expect(res.statusCode).not.toBe(200);
 });
 
 // register
@@ -54,8 +70,8 @@ test("volunteerController.verify", async () => {
             skill: ["s1", "s2"],
             preference: "",
             availability: [
-                1752825521362,
-                1752911921362
+                "2025-07-18T07:58:41.362Z",
+                "2025-07-19T07:58:41.362Z"
             ]
         }
     };
@@ -63,7 +79,7 @@ test("volunteerController.verify", async () => {
         setHeader: jest.fn().mockReturnThis(),
         end: jest.fn().mockReturnThis()
     };
-    let data = await volunteerController.register(req, res);
+    let data = await volunteerController.verify(req, res);
     expect(res.statusCode).toBe(200);
 });
 
@@ -82,6 +98,20 @@ test("volunteerController.getQuestion", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+test("volunteerController.getQuestion", async () => {
+    let req = {
+        body: {
+            email: "volunteer10@domain.com"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getQuestion(req, res);
+    expect(res.statusCode).not.toBe(200);
+});
+
 // forget
 test("volunteerController.forget", async () => {
     let req = {
@@ -97,6 +127,22 @@ test("volunteerController.forget", async () => {
     };
     let data = await volunteerController.forget(req, res);
     expect(res.statusCode).toBe(200);
+});
+
+test("volunteerController.forget", async () => {
+    let req = {
+        body: {
+            email: "volunteer10@domain.com",
+            reset_password_answer: "2",
+            password: "654321"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.forget(req, res);
+    expect(res.statusCode).not.toBe(200);
 });
 
 // updatePassword
@@ -177,8 +223,8 @@ test("volunteerController.updateProfile", async () => {
             skill: ["s1", "s2"],
             preference: "",
             availability: [
-                1752825521362,
-                1752911921362
+                "2025-07-18T07:58:41.362Z",
+                "2025-07-19T07:58:41.362Z"
             ]
         }
     };

@@ -1,4 +1,4 @@
-const mockVolunteerVerifications = [{
+const mockVolunteerVerification = [{
     id: 1,
     email: "volunteer101@domain.com",
     password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
@@ -23,14 +23,14 @@ const mockVolunteerVerifications = [{
 }];
 
 async function getOneByEmail(email) {
-    let rows = mockVolunteerVerifications.filter((vv) => {
+    let rows = mockVolunteerVerification.filter((vv) => {
         return vv.email === email;
     });
     return rows[0] || null;
 }
 
 async function getOneByToken(token) {
-    let rows = mockVolunteerVerifications.filter((vv) => {
+    let rows = mockVolunteerVerification.filter((vv) => {
         return vv.token === token;
     });
     return rows[0] || null;

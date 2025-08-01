@@ -91,7 +91,7 @@ async function deleteOneByToken(conn, token) {
         'DELETE FROM `admin_verification` WHERE `token` = ?',
         [data.token]
     );
-    return rows;
+    return null;
 }
 
 export default {
