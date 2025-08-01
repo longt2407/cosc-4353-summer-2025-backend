@@ -132,10 +132,10 @@ async function createOne(conn, event) {
     ], event);
     validator.validate(data);
     data.date = new Date(data.date);
-    let now = new Date();
-    if (moment(data.date).isBefore(moment(now), "day")) {
-        throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
-    }
+    // let now = new Date();
+    // if (moment(data.date).isBefore(moment(now), "day")) {
+    //     throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
+    // }
     stringify(data);
     // create event
     let sql = "INSERT INTO event (admin_id, name, description, location, skill, urgency, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -164,10 +164,10 @@ async function updateOne(conn, newEvent) {
     ], oldEvent, newEvent);
     validator.validate(data);
     data.date = new Date(data.date);
-    let now = new Date();
-    if (moment(data.date).isBefore(moment(), "day")) {
-        throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
-    }
+    // let now = new Date();
+    // if (moment(data.date).isBefore(moment(), "day")) {
+    //     throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
+    // }
     stringify(data);
     // update
     let sql = "UPDATE event SET admin_id = ?, name = ?, description = ?, location = ?, skill = ?, urgency = ?, date = ? WHERE id = ? AND is_deleted = ?";
@@ -204,7 +204,7 @@ async function deleteOne(conn, id, admin_id) {
     let sql_3 = "DELETE FROM event WHERE id = ?";
     let params_3 = [data.id];
     await conn.query(sql_3, params_3);
-    return null;
+    return 1;
 }
 
 async function getOneByAdminId(conn, id, admin_id) {
