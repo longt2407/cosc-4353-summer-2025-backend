@@ -191,7 +191,7 @@ async function createOne(conn, event) {
     validator.validate(data);
     data.date = new Date(data.date);
     let now = new Date();
-    if (moment(data.date).isAfter(moment(now), "day")) {
+    if (moment(data.date).isBefore(moment(now), "day")) {
         throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
     }
     stringify(data);
@@ -202,14 +202,13 @@ async function createOne(conn, event) {
     return rows.insertId;
 }
 
-async function updateOne(id, newEvent) {
-    let data = utils.objectAssign(["id"], { id });
-    validator.validate(data);
-    let oldEvent = await getOne(id);
+async function updateOne(conn, newEvent) {
+    let oldEvent = await getOne(conn, newEvent.id);
     if (!oldEvent) {
         throw new HttpError({statusCode: 400, message: `Event not found.`});
     }
-    data = utils.objectAssign([
+    let data = utils.objectAssign([
+        "id",
         "admin_id",
         "name",
         "description",
@@ -219,11 +218,20 @@ async function updateOne(id, newEvent) {
         "date"
     ], oldEvent, newEvent);
     validator.validate(data);
+    data.date = new Date(data.date);
+    let now = new Date();
+    if (moment(data.date).isBefore(moment(), "day")) {
+        throw new HttpError({ statusCode: 400, message: "Cannot create event in the past." })
+    }
+    stringify(data);
     // update
-    return 1;
+    let sql = "UPDATE event SET admin_id = ?, name = ?, description = ?, location = ?, skill = ?, urgency = ?, date = ? WHERE id = ? AND is_deleted = ?";
+    let params = [data.admin_id, data.name, data.description, data.location, data.skill, data.urgency, data.date, data.id, false];
+    const [rows] = await conn.query(sql, params);
+    return data.id;
 }
 
-async function deleteOne(id) {
+async function deleteOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
     // delete

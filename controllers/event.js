@@ -25,19 +25,23 @@ async function createOne(req, res) {
 }
 
 async function updateOne(req,res) {
-    let body = req.body;
-    let eventId = utils.parseStr(req.params.id);
-    body.admin_id = req.jwt.user.id;
-    eventId = await eventModel.updateOne(eventId, body)
-    let event = await eventModel.getOne(eventId);
-    eventModel.prepare(event);
-    return httpResp.Success[200](req, res, event);
+    await db.tx(req, res, async (conn) => {
+        let body = req.body;
+        body.admin_id = req.jwt.user.id;
+        [body.id] = utils.parseStr(req.params.id); 
+        let eventId = await eventModel.updateOne(conn, body);
+        let data = await eventModel.getOne(conn, eventId);
+        eventModel.prepare(data);
+        return data;
+    });
 }
 
 async function deleteOne(req, res) {
-    let eventId = utils.parseStr(req.params.id);
-    await eventModel.deleteOne(eventId);
-    return httpResp.Success[200](req, res, null);
+    await db.tx(req, res, async (conn) => {
+        let eventId = utils.parseStr(req.params.id);
+        await eventModel.deleteOne(conn, eventId);
+        return null;
+    });
 }
 
 async function assignVolunteer(req, res) {
