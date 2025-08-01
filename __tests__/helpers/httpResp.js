@@ -1,6 +1,7 @@
 import httpResp from "../../helpers/httpResp.js";
 import { HttpError } from "../../helpers/error.js";
 
+// Success[200]
 test("httpResp.Success[200]", () => {
     let req = {};
     let res = {
@@ -11,6 +12,7 @@ test("httpResp.Success[200]", () => {
     expect(res.statusCode).toBe(200);
 });
 
+// Error.default
 test("httpResp.Error.default 1", () => {
     let req = {};
     let res = {
@@ -34,6 +36,7 @@ test("httpResp.Error.default 2", () => {
     expect(res.statusCode).toBe(404);
 });
 
+// Error[500]
 test("httpResp.Error[500] 1", () => {
     let req = {};
     let res = {
@@ -54,6 +57,7 @@ test("httpResp.Error[500] 2", () => {
     expect(res.statusCode).toBe(500);
 });
 
+// Error[404]
 test("httpResp.Error[404] 1", () => {
     let req = {};
     let res = {
@@ -74,6 +78,7 @@ test("httpResp.Error[404] 2", () => {
     expect(res.statusCode).toBe(404);
 });
 
+// Error[401]
 test("httpResp.Error[401] 1", () => {
     let req = {};
     let res = {
@@ -94,6 +99,7 @@ test("httpResp.Error[401] 2", () => {
     expect(res.statusCode).toBe(401);
 });
 
+// Error[400]
 test("httpResp.Error[400] 1", () => {
     let req = {};
     let res = {

@@ -4,6 +4,7 @@ jest.mock('../../helpers/jwt.js');
 jest.mock('../../models/volunteer.js');
 jest.mock('../../models/volunteerVerification.js');
 
+// login
 test("volunteerController.login", async () => {
     let req = {
         body: {
@@ -19,6 +20,7 @@ test("volunteerController.login", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// register
 test("volunteerController.register", async () => {
     let req = {
         body: {
@@ -36,6 +38,7 @@ test("volunteerController.register", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// verify
 test("volunteerController.verify", async () => {
     let req = {
         body: {
@@ -64,6 +67,7 @@ test("volunteerController.verify", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// getQuestion
 test("volunteerController.getQuestion", async () => {
     let req = {
         body: {
@@ -78,6 +82,7 @@ test("volunteerController.getQuestion", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// forget
 test("volunteerController.forget", async () => {
     let req = {
         body: {
@@ -94,6 +99,7 @@ test("volunteerController.forget", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// updatePassword
 test("volunteerController.updatePassword", async () => {
     let req = {
         jwt: {
@@ -113,6 +119,7 @@ test("volunteerController.updatePassword", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// updateQuestionAndAnswer
 test("volunteerController.updateQuestionAndAnswer", async () => {
     let req = {
         jwt: {
@@ -133,6 +140,7 @@ test("volunteerController.updateQuestionAndAnswer", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// getProfile
 test("volunteerController.getProfile", async () => {
     let req = {
         jwt: {
@@ -149,6 +157,7 @@ test("volunteerController.getProfile", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// updateProfile
 test("volunteerController.updateProfile", async () => {
     let req = {
         jwt: {

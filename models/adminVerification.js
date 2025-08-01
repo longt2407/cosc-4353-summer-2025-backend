@@ -5,23 +5,12 @@ import DataType from "../helpers/dataType.js";
 import adminModel from "./admin.js";
 import pwd from "../helpers/pwd.js";
 import jwt from "../helpers/jwt.js";
-
-const mockAdminVerification = {
-    id: 1,
-    email: "admin@domain.com",
-    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    reset_password_question: "1 + 1 = ?",
-    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTU0MDg3MTgsImRhdGEiOnsiZW1haWwiOiJhZG1pbkBkb21haW4uY29tIn0sImlhdCI6MTc1MjgxNjcxOH0.nzjgtvGy7azvK3g_IwHGrc0pRn4IDyF8PEqm2SOpmsU",
-    is_deleted: false,
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: new Date()
-}
+import { HttpError } from "../helpers/error.js";
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
-    email: [DataType.STRING({
+    email: [
+        DataType.STRING({
             check: (val) => {
                 if (!(/^.+@.+$/.test(val))) {
                     return { error: new Error("invalid") };
@@ -36,21 +25,27 @@ const validator = new Validator({
     token: [DataType.STRING(), DataType.NOTNULL()]
 });
 
-async function getOneByEmail(email) {
+async function getOneByEmail(conn, email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
-    // get
-    return mockAdminVerification;
+    const [rows] = await conn.query(
+        'SELECT * FROM `admin_verification` WHERE `email` = ? AND `is_deleted` = ?',
+        [data.email, false]
+    );
+    return rows[0] || null;
 }
 
-async function getOneByToken(token) {
+async function getOneByToken(conn, token) {
     let data = utils.objectAssign(["token"], { token });
     validator.validate(data);
-    // get
-    return mockAdminVerification;
+    const [rows] = await conn.query(
+        'SELECT * FROM `admin_verification` WHERE `token` = ? AND `is_deleted` = ?',
+        [data.token, false]
+    );
+    return rows[0] || null;
 }
 
-async function createOne(admin) {
+async function createOne(conn, admin) {
     let data = utils.objectAssign([
         "email", 
         "password", 
@@ -58,28 +53,51 @@ async function createOne(admin) {
         "reset_password_answer"
     ], admin);
     validator.validate(data);
-    // let existedAdmin = await adminModel.getOneByEmail(data.email);
-    // if (existedAdmin) {
-    //     throw new HttpError({statusCode: 400, message: `This email is registered.`});
-    // }
+    let existedAdmin = await adminModel.getOneByEmail(conn, data.email);
+    if (existedAdmin) {
+        throw new HttpError({statusCode: 400, message: `This email is registered.`});
+    }
     data.password = await pwd.hash(data.password);
     data.reset_password_answer = await pwd.hash(data.reset_password_answer)
-    let adminVerification = await getOneByEmail(data.email);
+    let adminVerification = await getOneByEmail(conn, data.email);
     let token = jwt.sign({
         email: data.email,
     });
-    if (!adminVerification) {
-        // create
-    }
     if (adminVerification) {
-        // update
+        const [rows] = await conn.query(
+            'UPDATE `admin_verification` SET token = ? WHERE `id` = ? AND `is_deleted` = ?',
+            [token, adminVerification.id, false]
+        );
+        return token;
+    } else {
+        const [rows] = await conn.query(
+            'INSERT INTO `admin_verification`('
+            + '`email`, ' 
+            + '`password`, ' 
+            + '`token`, ' 
+            + '`reset_password_question`, ' 
+            + '`reset_password_answer` '
+            + ') VALUES (?, ?, ?, ?, ?)',
+            [data.email, data.password, token, data.reset_password_question, data.reset_password_answer]
+        );
+        return token;
     }
-    return token;
+}
+
+async function deleteOneByToken(conn, token) {
+    let data = utils.objectAssign(["token"], { token });
+    validator.validate(data);
+    const [rows] = await conn.query(
+        'DELETE FROM `admin_verification` WHERE `token` = ?',
+        [data.token]
+    );
+    return rows;
 }
 
 export default {
     validator,
     getOneByEmail,
     getOneByToken,
-    createOne
+    createOne,
+    deleteOneByToken
 }

@@ -1,9 +1,11 @@
 import adminController from "../../controllers/admin.js";
 
 jest.mock('../../helpers/jwt.js');
+jest.mock('../../controllers/db.js');
 jest.mock('../../models/admin.js');
 jest.mock('../../models/adminVerification.js');
 
+// login
 test("adminController.login", async () => {
     let req = {
         body: {
@@ -19,6 +21,22 @@ test("adminController.login", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+test("adminController.login - error", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com",
+            password: "123456"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.login(req, res);
+    expect(res.statusCode).not.toBe(200);
+});
+
+// register
 test("adminController.register", async () => {
     let req = {
         body: {
@@ -36,6 +54,7 @@ test("adminController.register", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// verify
 test("adminController.verify", async () => {
     let req = {
         body: {
@@ -49,10 +68,11 @@ test("adminController.verify", async () => {
         setHeader: jest.fn().mockReturnThis(),
         end: jest.fn().mockReturnThis()
     };
-    let data = await adminController.register(req, res);
+    let data = await adminController.verify(req, res);
     expect(res.statusCode).toBe(200);
 });
 
+// getQuestion
 test("adminController.getQuestion", async () => {
     let req = {
         body: {
@@ -67,6 +87,21 @@ test("adminController.getQuestion", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+test("adminController.getQuestion - error", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.getQuestion(req, res);
+    expect(res.statusCode).not.toBe(200);
+});
+
+// forget
 test("adminController.forget", async () => {
     let req = {
         body: {
@@ -83,6 +118,23 @@ test("adminController.forget", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+test("adminController.forget", async () => {
+    let req = {
+        body: {
+            email: "admin10@domain.com",
+            reset_password_answer: "2",
+            password: "654321"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.forget(req, res);
+    expect(res.statusCode).not.toBe(200);
+});
+
+// updatePassword
 test("adminController.updatePassword", async () => {
     let req = {
         jwt: {
@@ -102,6 +154,7 @@ test("adminController.updatePassword", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// updateQuestionAndAnswer
 test("adminController.updateQuestionAndAnswer", async () => {
     let req = {
         jwt: {
@@ -122,6 +175,7 @@ test("adminController.updateQuestionAndAnswer", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// getProfile
 test("adminController.getProfile", async () => {
     let req = {
         jwt: {
@@ -138,6 +192,7 @@ test("adminController.getProfile", async () => {
     expect(res.statusCode).toBe(200);
 });
 
+// updateProfile
 test("adminController.updateProfile", async () => {
     let req = {
         jwt: {
