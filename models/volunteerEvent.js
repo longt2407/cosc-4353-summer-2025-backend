@@ -30,11 +30,8 @@ const mockVolunteerEvent = {
     eleted_at: new Date()
 };
 
-async function assignVolunteer(eventId, volunteerId) {
-    let data = utils.objectAssign(['event_id', 'volunteer_id'], { 
-        event_id: eventId,
-        volunteer_id: volunteerId
-    });
+async function assignVolunteer(conn, eventId, volunteerId) {
+    let data = utils.objectAssign(['event_id', 'volunteer_id'], { eventId, volunteerId});
     validator.validate(data);
     // assign
     return 1;
