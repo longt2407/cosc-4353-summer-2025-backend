@@ -45,6 +45,11 @@ app.patch("/volunteer/qa", auth.is(auth.VOLUNTEER), volunteerController.updateQu
 app.get("/volunteer/profile", auth.is(auth.VOLUNTEER), volunteerController.getProfile);
 app.patch("/volunteer/profile", auth.is(auth.VOLUNTEER), volunteerController.updateProfile);
 
+app.get("/volunteer", auth.is(auth.ADMIN), volunteerController.getAll);
+app.get("/volunteer/:id", auth.is(auth.ADMIN), volunteerController.getOne);
+app.get("/volunteer/event/:id/matched", auth.is(auth.ADMIN), volunteerController.getAllMatchedByEventId);
+app.get("/volunteer/event/:id/assigned", auth.is(auth.ADMIN), volunteerController.getAllAssignedByEventId);
+
 // Admin
 app.post("/admin/login", adminController.login);
 app.post("/admin/register", adminController.register);
@@ -55,6 +60,9 @@ app.patch("/admin/password", auth.is(auth.ADMIN), adminController.updatePassword
 app.patch("/admin/qa", auth.is(auth.ADMIN), adminController.updateQuestionAndAnswer);
 app.get("/admin/profile", auth.is(auth.ADMIN), adminController.getProfile);
 app.patch("/admin/profile", auth.is(auth.ADMIN), adminController.updateProfile);
+
+app.get("/admin", auth.is(auth.VOLUNTEER), adminController.getAll);
+app.get("/admin/:id", auth.is(auth.VOLUNTEER), adminController.getOne);
 
 // Event
 app.get("/event", auth.is(auth.ADMIN), eventController.getAllByAdminId);

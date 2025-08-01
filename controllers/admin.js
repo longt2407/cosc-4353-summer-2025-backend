@@ -3,6 +3,7 @@ import jwt from "../helpers/jwt.js";
 import db from "./db.js";
 import adminModel from "../models/admin.js";
 import adminVerificationModel from "../models/adminVerification.js";
+import utils from "../helpers/utils.js";
 
 async function login(req, res) {
     await db.tx(req, res, async (conn) => {
@@ -107,6 +108,23 @@ async function updateProfile(req, res) {
     });
 }
 
+async function getAll(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let admins = await adminModel.getAll(conn);
+        adminModel.prepare(admins);
+        return admins;
+    });
+}
+
+async function getOne(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let [adminId] = utils.parseStr(req.params.id);
+        let admin = await adminModel.getOne(conn, adminId);
+        adminModel.prepare(admin);
+        return admin;
+    });
+}
+
 export default {
     login,
     register,
@@ -116,5 +134,7 @@ export default {
     updatePassword,
     updateQuestionAndAnswer,
     getProfile,
-    updateProfile
+    updateProfile,
+    getAll,
+    getOne
 }

@@ -6,6 +6,7 @@ import volunteerVerificationModel from "./volunteerVerification.js";
 import { HttpError } from "../helpers/error.js";
 import jwt from "../helpers/jwt.js";
 import pwd from "../helpers/pwd.js";
+import eventModel from "./event.js";
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
@@ -316,6 +317,29 @@ async function updateOne(conn, newVolunteer) {
     return data.id;
 }
 
+async function getAll(conn) {
+    const [rows] = await conn.query(
+        'SELECT * FROM `volunteer` WHERE `is_deleted` = ?',
+        [false]
+    );
+    parse(rows);
+    return rows;
+}
+
+async function getAllAssignedByEventId(conn, event_id) {
+    eventModel.validator.validate({
+        id: event_id
+    });
+    const [rows] = await conn.query(
+        'SELECT `volunteer`.*, `volunteer_event`.`status` FROM `volunteer` '
+        + 'JOIN `volunteer_event` ON `volunteer`.id = `volunteer_event`.`volunteer_id` '
+        + 'WHERE `volunteer_event`.`event_id` = ? AND `volunteer`.`is_deleted` = ? AND `volunteer_event`.`is_deleted` = ?',
+        [event_id, false, false]
+    );
+    parse(rows);
+    return rows;
+}
+
 export default {
     validator,
     prepare,
@@ -328,5 +352,7 @@ export default {
     getOneByEmailAndAnswer,
     updatePassword,
     updateQuestionAndAnswer,
-    updateOne
+    updateOne,
+    getAll,
+    getAllAssignedByEventId
 }

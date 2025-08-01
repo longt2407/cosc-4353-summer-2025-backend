@@ -3,6 +3,8 @@ import jwt from "../helpers/jwt.js";
 import db from "./db.js";
 import volunteerModel from "../models/volunteer.js";
 import volunteerVerificationModel from "../models/volunteerVerification.js";
+import eventModel from "../models/event.js";
+import utils from "../helpers/utils.js";
 
 async function login(req, res) {
     await db.tx(req, res, async (conn) => {
@@ -107,6 +109,50 @@ async function updateProfile(req, res) {
     });
 }
 
+async function getAll(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let volunteers = await volunteerModel.getAll(conn);
+        volunteerModel.prepare(volunteers);
+        return volunteers;
+    });
+}
+
+async function getOne(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let [volunteerId] = utils.parseStr(req.params.id);
+        let volunteer = await volunteerModel.getOne(conn, volunteerId);
+        volunteerModel.prepare(volunteer);
+        return volunteer;
+    });
+}
+
+async function getAllAssignedByEventId(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let [eventId] = utils.parseStr(req.params.id);
+        let adminId = req.jwt.user.id;
+        let event = await eventModel.getOne(conn, eventId);
+        if (event.admin_id !== adminId) {
+            throw new HttpError({ statusCode: 401 });
+        }
+        let volunteers = await volunteerModel.getAllAssignedByEventId(conn, eventId);
+        volunteerModel.prepare(volunteers);
+        return volunteers;
+    });
+}
+
+async function getAllMatchedByEventId(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let [eventId] = utils.parseStr(req.params.id);
+        let adminId = req.jwt.user.id;
+        let event = await eventModel.getOne(conn, eventId);
+        if (event.admin_id !== adminId) {
+            throw new HttpError({ statusCode: 401 });
+        }
+        let volunteers = await volunteerModel.getAll(conn);
+        return volunteers;
+    });
+}
+
 export default {
     login,
     register,
@@ -116,5 +162,9 @@ export default {
     updatePassword,
     updateQuestionAndAnswer,
     getProfile,
-    updateProfile
+    updateProfile,
+    getAll,
+    getOne,
+    getAllAssignedByEventId,
+    getAllMatchedByEventId
 }

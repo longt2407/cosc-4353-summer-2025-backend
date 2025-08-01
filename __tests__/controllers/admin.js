@@ -213,3 +213,29 @@ test("adminController.updateProfile", async () => {
     let data = await adminController.updateProfile(req, res);
     expect(res.statusCode).toBe(200);
 });
+
+// getAll
+test("adminController.getAll", async () => {
+    let req = {};
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.getAll(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+// getOne
+test("adminController.getOne", async () => {
+    let req = {
+        params: {
+            id: "1"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await adminController.getOne(req, res);
+    expect(res.statusCode).toBe(200);
+});
