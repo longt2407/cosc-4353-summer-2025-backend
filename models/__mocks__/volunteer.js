@@ -1,6 +1,6 @@
 const TODAY = (new Date()).getTime();
 const DAY_OFFSET = 1 * 24 * 60 * 60 * 1000;
-const mockVolunteers = [{
+const mockVolunteer = [{
     id: 1,
     email: "volunteer1@domain.com",
     password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
@@ -11,12 +11,16 @@ const mockVolunteers = [{
     last_name: "Parker",
     address_1: "123 Street Dr",
     address_2: null,
-    address_city: "Earth",
+    address_city: "Houston",
     address_state: "TX",
     address_zip: "70000",
-    skill: JSON.parse(JSON.stringify(["communication", "technology", "leader"])),
+    skill: ["communication", "technology", "leader"],
     preference: null,
-    availability: JSON.parse(JSON.stringify([TODAY - DAY_OFFSET, TODAY, TODAY + DAY_OFFSET])),
+    availability: [
+        "2025-07-31T07:11:19.409Z", 
+        "2025-08-01T07:11:19.409Z", 
+        "2025-08-02T07:11:19.409Z" 
+    ],
     is_deleted: false,
     created_at: new Date(),
     updated_at: new Date(),
@@ -32,63 +36,63 @@ const mockVolunteers = [{
     last_name: "Cena",
     address_1: "456 Street Dr",
     address_2: null,
-    address_city: "Moon",
+    address_city: "Austin",
     address_state: "WA",
     address_zip: "90000",
-    skill: JSON.parse(JSON.stringify(["strong", "technology"])),
+    skill: ["strong", "technology"],
     preference: null,
-    availability: JSON.parse(JSON.stringify([
-        new Date(TODAY + DAY_OFFSET).toISOString(), 
-        new Date(TODAY + 2 * DAY_OFFSET).toISOString(), 
-        new Date(TODAY + 3 * DAY_OFFSET).toISOString()
-    ])),
+    availability: [ 
+        "2025-08-02T07:12:29.714Z", 
+        "2025-08-03T07:12:29.714Z", 
+        "2025-08-04T07:12:29.714Z" 
+    ],
     is_deleted: false,
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: new Date()
 }];
 
-async function getOneByEmail(email) {
-    let rows = mockVolunteers.filter((v) => {
+async function getOneByEmail(conn, email) {
+    let rows = mockVolunteer.filter((v) => {
         return v.email === email
     })
     return rows[0] || null;
 }
 
-async function getOneByEmailAndPwd(email, password) {
-    let rows = mockVolunteers.filter((v) => {
+async function getOneByEmailAndPwd(conn, email, password) {
+    let rows = mockVolunteer.filter((v) => {
         return v.email === email && password === "123456";
     })
     return rows[0] || null;
 }
 
-async function createOneWithToken(volunteer) {
+async function createOneWithToken(conn, volunteer) {
     return 101;
 }
 
-async function getOne(id) {
-    let rows = mockVolunteers.filter((v) => {
+async function getOne(conn, id) {
+    let rows = mockVolunteer.filter((v) => {
         return v.email === id;
     })
     return rows[0] || null;
 }
 
-async function getOneByEmailAndAnswer(email, answer) {
-    let rows = mockVolunteers.filter((v) => {
+async function getOneByEmailAndAnswer(conn, email, answer) {
+    let rows = mockVolunteer.filter((v) => {
         return v.email === email && answer === "2";
     })
     return rows[0] || null;
 }
 
-async function updatePassword(id, password) {
+async function updatePassword(conn, id, password) {
     return 1;
 }
 
-async function updateQuestionAndAnswer(id, reset_password_question, reset_password_answer) {
+async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_password_answer) {
     return 1;
 }
 
-async function updateOne(newVolunteer) {
+async function updateOne(conn, newVolunteer) {
     return 1;
 }
 export default {

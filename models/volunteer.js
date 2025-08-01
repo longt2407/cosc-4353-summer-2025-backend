@@ -7,29 +7,6 @@ import { HttpError } from "../helpers/error.js";
 import jwt from "../helpers/jwt.js";
 import pwd from "../helpers/pwd.js";
 
-const mockVolunteer = {
-    id: 1,
-    email: "volunteer@domain.com",
-    password: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    reset_password_question: "1 + 1 = ?",
-    reset_password_answer: "$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa", // 123456
-    first_name: "Peter",
-    middle_name: null,
-    last_name: "Parker",
-    address_1: "123 Street Dr",
-    address_2: null,
-    address_city: "Star",
-    address_state: "TX",
-    address_zip: "70000",
-    skill: JSON.parse(JSON.stringify(["communication", "technology", "leader"])),
-    preference: null,
-    availability: JSON.parse(JSON.stringify([(new Date()).getTime(), (new Date()).getTime() + 1 * 24 * 60 * 60 * 1000])),
-    is_deleted: false,
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: new Date()
-};
-
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
     email: [
@@ -80,6 +57,7 @@ function prepare(rows) {
     const _prepare = (obj) => {
         if (obj) {
             delete obj.password;
+            delete obj.reset_password_question;
             delete obj.reset_password_answer;
             obj.role = auth.VOLUNTEER;
         }
@@ -93,23 +71,68 @@ function prepare(rows) {
     }
 }
 
-async function getOneByEmail(email) {
+function parse(rows) {
+    const _parse = (obj) => {
+        if (obj) {
+            if (obj.skill) {
+                obj.skill = JSON.parse(obj.skill);
+            }
+            if (obj.availability) {
+                obj.availability = JSON.parse(obj.availability);
+            }
+        }
+    }
+    if (!Array.isArray(rows)) {
+        _parse(rows);
+    } else {
+        for (let row of rows) {
+            _parse(row);
+        }
+    }
+}
+
+function stringify(rows) {
+    const _stringify = (obj) => {
+        if (obj) {
+            if (obj.skill) {
+                obj.skill = JSON.stringify(obj.skill);
+            }
+            if (obj.availability) {
+                obj.availability = JSON.stringify(obj.availability);
+            }
+        }
+    }
+    if (!Array.isArray(rows)) {
+        _stringify(rows);
+    } else {
+        for (let row of rows) {
+            _stringify(row);
+        }
+    }
+}
+
+async function getOneByEmail(conn, email) {
     let data = utils.objectAssign(["email"], { email });
     validator.validate(data);
-    // get
-    return mockVolunteer;
+    const [rows] = await conn.query(
+        'SELECT * FROM `volunteer` WHERE `email` = ? AND `is_deleted` = ?',
+        [data.email, false]
+    );
+    parse(rows);
+    return rows[0] || null;
 }
 
-async function getOneByEmailAndPwd(email, password) {
+async function getOneByEmailAndPwd(conn, email, password) {
     let data = utils.objectAssign(["email", "password"], { email, password });
     validator.validate(data);
-    let volunteer = await getOneByEmail(data.email);
-    // if (volunteer && await pwd.compare(data.password, volunteer.password)) {}
-    // get
-    return mockVolunteer;
+    let volunteer = await getOneByEmail(conn, data.email);
+    if (volunteer && await pwd.compare(data.password, volunteer.password)) {
+        return volunteer;
+    }
+    return null;
 }
 
-async function createOneWithToken(volunteer) {
+async function createOneWithToken(conn, volunteer) {
     let data = utils.objectAssign([
         "token",
         "first_name",
@@ -131,44 +154,92 @@ async function createOneWithToken(volunteer) {
     } catch (e) {
         throw new HttpError({ statusCode: 400, message: `Invalid token.`});
     }
-    let volunteerVerification = await volunteerVerificationModel.getOneByToken(data.token);
+    let volunteerVerification = await volunteerVerificationModel.getOneByToken(conn, data.token);
     if (!volunteerVerification) {
         throw new HttpError({ statusCode: 400, message: `Invalid token.`});
     }
-    // create
-    return 1;
+    let existedVolunteer = await getOneByEmail(conn, volunteerVerification.email);
+    if (existedVolunteer) {
+        throw new HttpError({ statusCode: 400, message: `This email is registered.` });
+    }
+    stringify(data);
+    const [rows] = await conn.query(
+        'INSERT INTO `volunteer`('
+        + '`email`, '
+        + '`password`, '
+        + '`reset_password_question`, '
+        + '`reset_password_answer`, '
+        + '`first_name`, '
+        + '`middle_name`, '
+        + '`last_name`, '
+        + '`address_1`, '
+        + '`address_2`, '
+        + '`address_city`, '
+        + '`address_state`, '
+        + '`address_zip`, '
+        + '`skill`, '
+        + '`preference`, '
+        + '`availability` '
+        + ') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            volunteerVerification.email, 
+            volunteerVerification.password, 
+            volunteerVerification.reset_password_question, 
+            volunteerVerification.reset_password_answer,
+            data.first_name,
+            data.middle_name,
+            data.last_name,
+            data.address_1,
+            data.address_2,
+            data.address_city,
+            data.address_state,
+            data.address_zip,
+            data.skill,
+            data.preference,
+            data.availability
+        ]
+    );
+    await volunteerVerificationModel.deleteOneByToken(conn, data.token);
+    return rows.insertId;
 }
 
-async function getOne(id) {
+async function getOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
-    // get
-    return mockVolunteer;
+    const [rows] = await conn.query(
+        'SELECT * FROM `volunteer` WHERE `id` = ? AND `is_deleted` = ?',
+        [data.id, false]
+    );
+    parse(rows);
+    return rows[0] || null;
 }
 
-async function getOneByEmailAndAnswer(email, answer) {
+async function getOneByEmailAndAnswer(conn, email, answer) {
     let data = utils.objectAssign(["email", "answer"], { email, answer });
     validator.validate(data);
-    let volunteer = await getOneByEmail(data.email);
+    let volunteer = await getOneByEmail(conn, data.email);
     if (volunteer && await pwd.compare(answer, volunteer.reset_password_answer)) {
-        return mockVolunteer;
+        return volunteer;
     }
     return null;
 }
 
-async function updatePassword(id, password) {
+async function updatePassword(conn, id, password) {
     let data = utils.objectAssign(["id", "password"], { id, password });
     validator.validate(data);
-    let volunteer = await getOne(data.id);
+    let volunteer = await getOne(conn, data.id);
     if (!volunteer) {
         throw new HttpError({statusCode: 400, message: `Volunteer not found.`});
     }
     data.password = await pwd.hash(data.password);
-    // update
-    return 1;
+    const [rows] = await conn.query(
+        'UPDATE `volunteer` SET password = ? WHERE `id` = ? AND `is_deleted` = ?',
+        [data.password, data.id, false]
+    );
+    return data.id;
 }
 
-async function updateQuestionAndAnswer(id, reset_password_question, reset_password_answer) {
+async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_password_answer) {
     let data = utils.objectAssign([
         "id", 
         "reset_password_question", 
@@ -180,12 +251,15 @@ async function updateQuestionAndAnswer(id, reset_password_question, reset_passwo
     });
     validator.validate(data);
     data.reset_password_answer = await pwd.hash(data.reset_password_answer);
-    // update
-    return 1;
+    const [rows] = await conn.query(
+        'UPDATE `volunteer` SET `reset_password_question` = ?, `reset_password_answer` = ? WHERE `id` = ? AND `is_deleted` = ?',
+        [data.reset_password_question, data.reset_password_answer, data.id, false]
+    );
+    return data.id;
 }
 
-async function updateOne(newVolunteer) {
-    let oldVolunteer = await getOne(newVolunteer.id);
+async function updateOne(conn, newVolunteer) {
+    let oldVolunteer = await getOne(conn, newVolunteer.id);
     if (!oldVolunteer) {
         throw new HttpError({statusCode: 400, message: `Volunteer not found.`});
     }
@@ -208,13 +282,45 @@ async function updateOne(newVolunteer) {
         newVolunteer
     );
     validator.validate(data);
-    // update
+    stringify(data);
+    const [rows] = await conn.query(
+        'UPDATE `volunteer` SET'
+        + '`first_name` = ?, '
+        + '`middle_name` = ?, '
+        + '`last_name` = ?, '
+        + '`address_1` = ?, '
+        + '`address_2` = ?, '
+        + '`address_city` = ?, '
+        + '`address_state` = ?, '
+        + '`address_zip` = ?, '
+        + '`skill` = ?, '
+        + '`preference` = ?, '
+        + '`availability` = ? '
+        + 'WHERE `id` = ? AND `is_deleted` = ?',
+        [
+            data.first_name,
+            data.middle_name,
+            data.last_name,
+            data.address_1,
+            data.address_2,
+            data.address_city,
+            data.address_state,
+            data.address_zip,
+            data.skill,
+            data.preference,
+            data.availability,
+            data.id,
+            false
+        ]
+    );
     return data.id;
 }
 
 export default {
     validator,
     prepare,
+    parse,
+    stringify,
     getOneByEmail,
     getOneByEmailAndPwd,
     createOneWithToken,
