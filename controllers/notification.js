@@ -1,5 +1,6 @@
-import {getNotifByVolunteerId, markAsRead, createNotif, deleteNotif, getGlobalNotifs} from "../models/notification.js";
+import {getNotifByVolunteerId, markAsRead, createNotif, deleteNotif, /*getGlobalNotifs*/} from "../models/notification.js";
 import httpResp from "../helpers/httpResp.js";
+import db from "../controllers/db.js";
 
 const {Success, Error} = httpResp;
 
@@ -19,8 +20,8 @@ export const getAllNotifs = async (req, res) => {
         return Error[403](req, res, new Error("Unauthorized access."));
     }
 
-    const notifs = getNotifByVolunteerId(volunteerID);
-    const globalNotifs = getGlobalNotifs();
+    const notifs = await getNotifByVolunteerId(volunteerID);
+    //const globalNotifs = getGlobalNotifs();
     return Success[200](req, res, notifs);
 };
 
@@ -42,13 +43,14 @@ export const deleteNotifById = async (req, res) => {
     const notifID = parseInt(req.params.id);
     const loggedUser = req.jwt?.user;
 
-    const notifRemoved = deleteNotif(notifID);
+    const notifRemoved = await deleteNotif(notifID);
+
     if(!notifRemoved) {
-        return Error[404](req, res, new Error("Notification not found"));
+        return Error[400](req, res, new Error("Notification not found"));
     }
 
     if(loggedUser.role !==1 && notifRemoved.volunteer_id !== loggedUser.id) {
-        return Error[403](req, res, new Error("Unauthorized to delete this notification"));
+        return Error[400](req, res, new Error("Unauthorized to delete this notification"));
     }
 
     return Success[200](req, res, notifRemoved);
@@ -67,6 +69,6 @@ export const createNewNotif = async (req, res) => {
         return Error[400](req, res, new Error("Missing required fields"));
     }
 
-    const newNotif = createNotif({volunteer_id, type, title, message});
+    const newNotif = await createNotif({volunteer_id, type, title, message});
     return Success[200](req, res, newNotif);
 };

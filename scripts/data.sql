@@ -97,5 +97,10 @@ VALUES
     'Houston, TX',
     '["technology"]',
     1,
-    '2025-07-28 10:32:00-05:00' -- 07/28/2025
+    '2025-07-28 10:32:00' -- 07/28/2025
 );
+
+INSERT INTO notification (volunteer_id, type, title, message, status, is_deleted, created_at, updated_at, deleted_at)
+VALUES
+(1, 0, 'Event Assigned', 'Event assigned to you.', 0, FALSE, NOW(), NOW(), NULL),
+(1, 2, 'Reminder', 'Your shift is tomorrow.', 0, FALSE, NOW(), NOW(), NULL);

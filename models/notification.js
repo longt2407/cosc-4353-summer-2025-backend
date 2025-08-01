@@ -1,85 +1,36 @@
-let notifData = [
-    {
-        id: 1,
-        volunteer_id: 1,
-        type: 0,
-        title: "Event Assigned",
-        message: "Event assigned to you.",
-        status: 0,
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-    },
-    {
-        id: 2,
-        volunteer_id: 1,
-        type: 2,
-        title: "Reminder",
-        message: "Your shift is tomorrow.",
-        status: 0,
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-    },
-    {
-        id: 3,
-        volunteer_id: null,  // Global notification
-        type: 1,
-        title: "Site Maintenance",
-        message: "The site will be down for maintenance at 10PM.",
-        status: 0,
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-    }
-];
+import db from "../controllers/db.js";
 
-//ID incrementing until db is developed
-let nextId = notifData.length + 1;
-
-export const getGlobalNotifs = () => notifData.filter(notif => notif.volunteer_id === null && !notif.is_deleted);
-export const getNotifByVolunteerId = (volunteer_id) => notifData.filter(notif => notif.volunteer_id === volunteer_id && !notif.is_deleted || notif.volunteer_id === null);
-
-export const markAsRead = (id) => {
-    const notif = notifData.find(notif => notif.id === id);
-
-    if(notif) {
-        notif.status = 1;
-        notif.updated_at = new Date();
-        return notif;
-    }else{
-        return null;
-    }
+//export const getGlobalNotifs = async () => (await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND volunteer_id IS NULL"))[0];
+export const getNotifByVolunteerId = async (volunteer_id) => {
+    const [rows] = await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND volunteer_id = ?", [volunteer_id]);
+    return rows;
 };
 
-export const createNotif = (data) => {
-    const newNotif = {
-        id: nextId++,
-        volunteer_id: data.volunteer_id,
-        type: data.type || 0,
-        title: data.title,
-        message: data.message || "",
-        status: 0,
-        is_deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-    };
+export const markAsRead = async (id) => {
+    await db.pool.query("UPDATE notification SET status = 1, updated_at = NOW() WHERE id = ?", [id]);
+    const [rows] = await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND id = ?", [id]);
 
-    notifData.push(newNotif);
-    return newNotif;
+    return rows[0];
+};
+
+export const createNotif = async(data) => {
+    const {
+        volunteer_id,
+        type = 0,
+        title,
+        message = "",
+    } = data;
+
+    await db.pool.query("INSERT INTO notification (volunteer_id, type, title, message, status, is_deleted, created_at, updated_at) VALUES (?, ?, ?, ?, 0, FALSE, NOW(), NOW())", [volunteer_id, type, title, message]);
+
+    //maybe make below this instead:  const [rows] = await db.query("SELECT * FROM notification ORDER BY id DESC LIMIT 1");
+    const [rows] = await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND volunteer_id = ? ORDER BY id DESC LIMIT 1", [volunteer_id]);
+    return rows[0];
 }
 
-export const deleteNotif = (id) => {
-    const notif = notifData.find(notif => notif.id === id);
-    if(notif) {
-        notif.is_deleted = true;
-        notif.deleted_at = new Date();
-        return notif;
-    }else{
-        return null;
-    }
+export const deleteNotif = async (id) => {
+    await db.pool.query("UPDATE notification SET is_deleted = true, updated_at = NOW(), deleted_at = NOW() WHERE id = ?", [id]);
+
+    const [rows] = await db.pool.query("SELECT * FROM notification WHERE id = ?", [id]);
+    return rows[0];
 }
