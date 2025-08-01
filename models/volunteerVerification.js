@@ -64,8 +64,20 @@ async function createOne(conn, volunteer) {
     });
     if (volunteerVerification) {
         const [rows] = await conn.query(
-            'UPDATE `volunteer_verification` SET token = ? WHERE `id` = ? AND `is_deleted` = ?',
-            [token, volunteerVerification.id, false]
+            'UPDATE `volunteer_verification` SET '
+            + '`password` = ?, ' 
+            + '`token` = ?, '
+            + '`reset_password_question` = ?, '
+            + '`reset_password_answer` = ?, '
+            + 'WHERE `id` = ? AND `is_deleted` = ?',
+            [
+                data.password,
+                token,
+                data.reset_password_question,
+                data.reset_password_answer,
+                volunteerVerification.id, 
+                false
+            ]
         );
         return token;
     } else {
