@@ -478,3 +478,24 @@ test("volunteerModel.updateOne - error 1", async () => {
     await expect(fn).rejects.toThrow();
 });
 
+// getAll
+test("volunteerModel.getAll 1", async () => {
+    let conn = {
+        query: jest.fn()
+            .mockResolvedValueOnce([cloneMockVolunteer])
+    };
+    let data = await volunteerModel.getAll(conn);
+    expect(data).toEqual(cloneMockVolunteer);
+});
+
+// getAllAssignedByEventId
+test("volunteerModel.getAllAssignedByEventId 1", async () => {
+    let conn = {
+        query: jest.fn()
+            .mockResolvedValueOnce([cloneMockVolunteer])
+    };
+    let eventId = 1;
+    let data = await volunteerModel.getAllAssignedByEventId(conn, eventId);
+    expect(data).toEqual(cloneMockVolunteer);
+});
+
