@@ -331,7 +331,7 @@ async function getAllAssignedByEventId(conn, event_id) {
         id: event_id
     });
     const [rows] = await conn.query(
-        'SELECT `volunteer`.* FROM `volunteer` '
+        'SELECT `volunteer`.*, `volunteer_event`.`status` FROM `volunteer` '
         + 'JOIN `volunteer_event` ON `volunteer`.id = `volunteer_event`.`volunteer_id` '
         + 'WHERE `volunteer_event`.`event_id` = ? AND `volunteer`.`is_deleted` = ? AND `volunteer_event`.`is_deleted` = ?',
         [event_id, false, false]
