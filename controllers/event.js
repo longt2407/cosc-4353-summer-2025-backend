@@ -61,16 +61,18 @@ async function assignVolunteer(req, res) {
 }
 
 async function dropVolunteer(req, res) {
-    let body = req.body;
-    let volunteerId = body.volunteer_id;
-    let eventId = utils.parseStr(req.params.id);
-    let adminId = req.jwt.user.id;
-    let event = await eventModel.getOneByAdminId(eventId, adminId);
-    if (!event) {
-        throw new HttpError({ statusCode: 400, message: "Event not found." })
-    }
-    await volunteerEventModel.dropVolunteer(eventId, volunteerId);
-    return httpResp.Success[200](req, res, null);
+    await db.tx(req, res, async (conn) => {
+        let body = req.body;
+        let volunteerId = body.volunteer_id;
+        let [eventId] = utils.parseStr(req.params.id);
+        let adminId = req.jwt.user.id;
+        // let event = await eventModel.getOneByAdminId(conn, eventId, adminId);
+        // if (!event) {
+        //     throw new HttpError({ statusCode: 400, message: "Event not found." })
+        // }
+        await volunteerEventModel.dropVolunteer(conn, eventId, volunteerId, adminId);
+        return null;
+    }); 
 }
 
 async function getOneByAdminId(req, res) {
