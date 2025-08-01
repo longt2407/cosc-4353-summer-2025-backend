@@ -198,6 +198,14 @@ async function updateOne(conn, newAdmin) {
     return data.id;
 }
 
+async function getAll(conn) {
+    const [rows] = await conn.query(
+        'SELECT * FROM `admin` WHERE `is_deleted` = ?',
+        [false]
+    );
+    return rows;
+}
+
 export default {
     validator,
     prepare,
@@ -208,5 +216,6 @@ export default {
     getOneByEmailAndAnswer,
     updatePassword,
     updateQuestionAndAnswer,
-    updateOne
+    updateOne,
+    getAll
 }

@@ -322,3 +322,12 @@ test("adminModel.updateOne - error 1", async () => {
     await expect(fn).rejects.toThrow();
 });
 
+// getAll
+test("adminModel.getAll 1", async () => {
+    let conn = {
+        query: jest.fn()
+            .mockResolvedValueOnce([mockAdmin])
+    };
+    let data = await adminModel.getAll(conn);
+    expect(data).toEqual(mockAdmin);
+});

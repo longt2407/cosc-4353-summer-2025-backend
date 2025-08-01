@@ -95,6 +95,15 @@ async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_
 async function updateOne(conn, newVolunteer) {
     return 1;
 }
+
+async function getAll(conn) {
+    return mockVolunteer;
+}
+
+async function getAllAssignedByEventId(conn, event_id) {
+    return mockVolunteer;
+}
+
 export default {
     ...jest.requireActual("../volunteer.js").default,
     getOneByEmail,
@@ -104,5 +113,7 @@ export default {
     getOneByEmailAndAnswer,
     updatePassword,
     updateQuestionAndAnswer,
-    updateOne
+    updateOne,
+    getAll,
+    getAllAssignedByEventId
 }

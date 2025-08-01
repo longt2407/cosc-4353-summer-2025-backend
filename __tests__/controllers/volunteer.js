@@ -4,6 +4,7 @@ jest.mock('../../helpers/jwt.js');
 jest.mock('../../controllers/db.js');
 jest.mock('../../models/volunteer.js');
 jest.mock('../../models/volunteerVerification.js');
+jest.mock('../../models/event.js');
 
 // login
 test("volunteerController.login", async () => {
@@ -234,4 +235,108 @@ test("volunteerController.updateProfile", async () => {
     };
     let data = await volunteerController.updateProfile(req, res);
     expect(res.statusCode).toBe(200);
+});
+
+// getAll
+test("volunteerController.getAll", async () => {
+    let req = {};
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getAll(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+// getOne
+test("volunteerController.getOne", async () => {
+    let req = {
+        params: {
+            id: "1"
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getOne(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+// getAllAssignedByEventId
+test("volunteerController.getAllAssignedByEventId", async () => {
+    let req = {
+        params: {
+            id: "1"
+        },
+        jwt: {
+            user: {
+                id: 1
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getAllAssignedByEventId(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+test("volunteerController.getAllAssignedByEventId - error 1", async () => {
+    let req = {
+        params: {
+            id: "1"
+        },
+        jwt: {
+            user: {
+                id: 2
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getAllAssignedByEventId(req, res);
+    expect(req.statusCode).not.toBe(200);
+});
+
+// getAllMatchedByEventId
+test("volunteerController.getAllMatchedByEventId", async () => {
+    let req = {
+        params: {
+            id: "1"
+        },
+        jwt: {
+            user: {
+                id: 1
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getAllMatchedByEventId(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+test("volunteerController.getAllMatchedByEventId - error 1", async () => {
+    let req = {
+        params: {
+            id: "1"
+        },
+        jwt: {
+            user: {
+                id: 2
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await volunteerController.getAllMatchedByEventId(req, res);
+    expect(req.statusCode).not.toBe(200);
 });

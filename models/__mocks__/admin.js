@@ -69,6 +69,11 @@ async function updateQuestionAndAnswer(conn, id, reset_password_question, reset_
 async function updateOne(conn, newAdmin) {
     return 1;
 }
+
+async function getAll(conn) {
+    return mockAdmin;
+}
+
 export default {
     ...jest.requireActual("../admin.js").default,
     getOneByEmail,
@@ -78,5 +83,6 @@ export default {
     getOneByEmailAndAnswer,
     updatePassword,
     updateQuestionAndAnswer,
-    updateOne
+    updateOne,
+    getAll
 }
