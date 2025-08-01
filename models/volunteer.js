@@ -32,7 +32,8 @@ const mockVolunteer = {
 
 const validator = new Validator({
     id: [DataType.NUMBER(), DataType.NOTNULL()],
-    email: [DataType.STRING({
+    email: [
+        DataType.STRING({
             check: (val) => {
                 if (!(/^.+@.+$/.test(val))) {
                     return { error: new Error("invalid") };

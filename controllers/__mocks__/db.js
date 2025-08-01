@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import httpResp from "../helpers/httpResp.js";
+import httpResp from "../../helpers/httpResp.js";
 
 let config = {};
 

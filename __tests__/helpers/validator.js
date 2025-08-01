@@ -2,6 +2,7 @@ import DataType from "../../helpers/dataType.js";
 import Validator from "../../helpers/validator.js";
 import { HttpError } from "../../helpers/error.js";
 
+// validate
 test("validator.validate 1", () => {
     const validator = new Validator({
         x: [DataType.NUMBER()]
@@ -35,6 +36,7 @@ test("validator.validate - error", () => {
     }).toThrow(HttpError);
 });
 
+// check
 test("validator.check 1", () => {
     const validator = new Validator({
         x: [DataType.NUMBER()]
