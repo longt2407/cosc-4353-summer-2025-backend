@@ -1,3 +1,4 @@
+import db from "../controllers/db.js";
 //Temp data until db is created
 const tempData = [
     {

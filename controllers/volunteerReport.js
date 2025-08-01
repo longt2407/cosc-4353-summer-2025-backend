@@ -12,7 +12,7 @@ export const getVolunteerReport = async (req, res) => {
             return Error[404](req, res, new Error("Volunteer report not found"));
         }
         return Success[200](req, res, report);
+    }else{
+        return Error[404](req, res, new Error("No Volunteer_id"));
     }
-
-    return Success[200](req, res, reportData);
 }
