@@ -38,7 +38,7 @@ async function updateOne(req,res) {
 
 async function deleteOne(req, res) {
     await db.tx(req, res, async (conn) => {
-        let eventId = utils.parseStr(req.params.id);
+        let [eventId] = utils.parseStr(req.params.id);
         await eventModel.deleteOne(conn, eventId);
         return null;
     });
@@ -49,7 +49,7 @@ async function assignVolunteer(req, res) {
     let volunteerId = body.volunteer_id;
     let eventId = utils.parseStr(req.params.id);
     let adminId = req.jwt.user.id;
-    let event = await eventModel.getOneByAdminId(eventId, adminId);
+    let event = await eventModel.getOne(conn, eventId);
     if (!event) {
         throw new HttpError({ statusCode: 400, message: "Event not found." })
     }

@@ -234,8 +234,21 @@ async function updateOne(conn, newEvent) {
 async function deleteOne(conn, id) {
     let data = utils.objectAssign(["id"], { id });
     validator.validate(data);
-    // delete
-    return 1;
+    let sql_1 = "SELECT COUNT(*) as cnt FROM volunteer_event WHERE event_id = ? AND is_deleted = ?";
+    let params_1 = [data.id, false];
+    const [rows] = await conn.query(sql_1, params_1);
+    if (rows[0].cnt > 0) {
+        throw new HttpError({ statusCode: 400, message: "Cannot delete event. You must drop all volunteers before deleting."});
+    }
+    // delete volunteer_event table
+    let sql_2 = "DELETE FROM volunteer_event WHERE event_id = ?";
+    let params_2 = [data.id];
+    await conn.query(sql_2, params_2);
+    //delete event table
+    let sql_3 = "DELETE FROM event WHERE id = ?";
+    let params_3 = [data.id];
+    await conn.query(sql_3, params_3);
+    return null;
 }
 
 async function getOneByAdminId(conn, id, admin_id) {
