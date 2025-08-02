@@ -1,49 +1,56 @@
 import db from "../controllers/db.js";
-//Temp data until db is created
-const tempData = [
-    {
-        volunteer_id: 1,
-        volunteer_email: 'alice@example.com',
-        volunteer_first_name: 'Alice',
-        volunteer_middle_name: 'B.',
-        volunteer_last_name: 'Smith',
-        note: 'Reliable and always on time',
-        total_assigned_event: 5,
-        total_participated_event: 4,
-        total_no_show_event: 1
-    },
-    {
-        volunteer_id: 2,
-        volunteer_email: 'bob@example.com',
-        volunteer_first_name: 'Bob',
-        volunteer_middle_name: '',
-        volunteer_last_name: 'Jones',
-        note: 'No shows often',
-        total_assigned_event: 6,
-        total_participated_event: 3,
-        total_no_show_event: 3
-    },
-];
 
-export const getMockReport = () => { return tempData;}
 
-export const getVolunteerReportSorted = (key = 'volunteer_id', order = 'asc') => {
-    return [...tempData].sort((a, b) => {
-        const aVal = a[key];
-        const bVal = b[key];
+export const getVolunteerReport = async (key = 'volunteer_id', order = 'asc') => {
+   try {
+       const orderByColumn = key === 'volunteer_id' ? 'volunteer_id' : key;
 
-        if(typeof aVal === 'string' && typeof bVal === 'string') {
-            return order === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        }
-        if(typeof aVal === 'number' && typeof bVal === 'number') {
-            return order === 'asc' ? aVal - bVal : bVal - aVal;
-        }
 
-        return 0;
-    });
+       const [rows] = await db.pool.query(`
+           SELECT
+               v.id AS volunteer_id,
+               v.email AS volunteer_email,
+               v.first_name AS volunteer_first_name,
+               v.middle_name AS volunteer_middle_name,
+               v.last_name AS volunteer_last_name,
+               COUNT(CASE WHEN vh.type = 'assigned' THEN 1 END) AS total_assigned_event,
+               COUNT(CASE WHEN vh.type = 'participated' THEN 1 END) AS total_participated_event,
+               COUNT(CASE WHEN vh.type = 'no-show' THEN 1 END) AS total_no_show_event
+           FROM volunteer v
+                    LEFT JOIN volunteer_history vh ON v.id = vh.volunteer_id
+           GROUP BY v.id, v.email, v.first_name, v.middle_name, v.last_name
+           ORDER BY ${orderByColumn} ${order.toUpperCase()}
+       `);
+       return rows;
+   } catch (err) {
+       console.error("Error in getVolunteerReport:", err);
+       throw err;
+   }
 };
 
-export const searchVolunteerReport = (searchKey) => {
-    const query = searchKey.toLowerCase();
-    return tempData.filter(volunteer => `${volunteer.volunteer_first_name} ${volunteer.volunteer_middle_name} ${volunteer.volunteer_last_name}`.toLowerCase().includes(query));
+
+export const getVolunteerReportById = async (volunteerId) => {
+   try {
+       const [rows] = await db.pool.query(`
+           SELECT
+               v.id AS volunteer_id,
+               v.email AS volunteer_email,
+               v.first_name AS volunteer_first_name,
+               v.middle_name AS volunteer_middle_name,
+               v.last_name AS volunteer_last_name,
+               e.id AS event_id,
+               e.name AS event_name,
+               e.date AS event_date,
+               vh.type AS participation_type
+           FROM volunteer v
+                    JOIN volunteer_history vh ON v.id = vh.volunteer_id
+                    JOIN event e ON vh.event_id = e.id
+           WHERE v.id = ?
+           ORDER BY e.date DESC
+       `, [volunteerId]);
+       return rows;
+   } catch (err) {
+       console.error("Error in getVolunteerReportById:", err);
+       throw err;
+   }
 };

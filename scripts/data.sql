@@ -1,12 +1,12 @@
 -- volunteer --
 
 INSERT INTO `volunteer` (
-    `id`, 
-    `email`, 
-    `password`, 
-    `reset_password_question`, 
-    `reset_password_answer`, 
-    `first_name`, 
+    `id`,
+    `email`,
+    `password`,
+    `reset_password_question`,
+    `reset_password_answer`,
+    `first_name`,
     `last_name`,
     `address_1`,
     `address_city`,
@@ -14,11 +14,11 @@ INSERT INTO `volunteer` (
     `address_zip`,
     `skill`,
     `availability`
-) 
-VALUES 
+)
+VALUES
 (
-    1, 
-    'volunteer1@domain.com', 
+    1,
+    'volunteer1@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -31,8 +31,8 @@ VALUES
     '["communication","technology","leader"]',
     '["2025-07-28T03:11:45.818Z","2025-07-29T03:11:45.818Z","2025-07-30T03:11:45.818Z"]'
 ), (
-    2, 
-    'volunteer2@domain.com', 
+    2,
+    'volunteer2@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -45,8 +45,8 @@ VALUES
     '["strong","technology"]',
     '["2025-07-27T03:15:31.611Z","2025-07-28T03:15:31.611Z","2025-07-29T03:15:31.611Z"]'
 ), (
-    3, 
-    'volunteer3@domain.com', 
+    3,
+    'volunteer3@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -59,8 +59,8 @@ VALUES
     '["strong","technology"]',
     '["2025-07-29T03:15:31.611Z","2025-07-30T03:15:31.611Z","2025-07-31T03:15:31.611Z"]'
 ), (
-    4, 
-    'volunteer4@domain.com', 
+    4,
+    'volunteer4@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -73,8 +73,8 @@ VALUES
     '["communication","leader"]',
     '["2025-07-27T03:15:31.611Z","2025-07-28T03:15:31.611Z"]'
 ), (
-    5, 
-    'volunteer5@domain.com', 
+    5,
+    'volunteer5@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -87,8 +87,8 @@ VALUES
     '["communication","technology"]',
     '["2025-07-29T03:15:31.611Z","2025-07-30T03:15:31.611Z"]'
 ), (
-    6, 
-    'volunteer6@domain.com', 
+    6,
+    'volunteer6@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -101,8 +101,8 @@ VALUES
     '["strong","leader"]',
     '["2025-07-31T03:15:31.611Z"]'
 ), (
-    7, 
-    'volunteer7@domain.com', 
+    7,
+    'volunteer7@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -115,8 +115,8 @@ VALUES
     '["strong"]',
     '["2025-07-27T03:15:31.611Z","2025-07-31T03:15:31.611Z"]'
 ), (
-    8, 
-    'volunteer8@domain.com', 
+    8,
+    'volunteer8@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -129,8 +129,8 @@ VALUES
     '["leader"]',
     '["2025-07-28T03:15:31.611Z","2025-07-30T03:15:31.611Z"]'
 ), (
-    9, 
-    'volunteer9@domain.com', 
+    9,
+    'volunteer9@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -143,8 +143,8 @@ VALUES
     '["technology"]',
     '["2025-07-27T03:15:31.611Z","2025-07-29T03:15:31.611Z"]'
 ), (
-    10, 
-    'volunteer10@domain.com', 
+    10,
+    'volunteer10@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -161,26 +161,26 @@ VALUES
 -- admin --
 
 INSERT INTO `admin` (
-    `id`, 
-    `email`, 
-    `password`, 
-    `reset_password_question`, 
-    `reset_password_answer`, 
-    `first_name`, 
+    `id`,
+    `email`,
+    `password`,
+    `reset_password_question`,
+    `reset_password_answer`,
+    `first_name`,
     `last_name`
-) 
-VALUES 
+)
+VALUES
 (
-    1, 
-    'admin1@domain.com', 
+    1,
+    'admin1@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'admin',
     '1'
 ), (
-    2, 
-    'admin2@domain.com', 
+    2,
+    'admin2@domain.com',
     '$2b$10$FXRPwd2PNEJf26aGd.ObZeYg2C9KhqGe9Zf9NC1W74qnawH5eDCxa', -- 123456
     '1 + 1 = ?',
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
@@ -191,23 +191,62 @@ VALUES
 -- event --
 
 INSERT INTO `event` (
-    `id`, 
-    `admin_id`, 
-    `name`, 
-    `description`, 
-    `location`, 
-    `skill`, 
-    `urgency`,
-    `date`
-) 
-VALUES 
-(
-    1, 
-    '1', 
-    'Event 1',
-    '07/29/2025 14-16PM',
-    'Houston, TX',
-    '["technology"]',
-    1,
-    '2025-07-28 10:32:00-05:00' -- 07/28/2025
-);
+   `id`,
+   `admin_id`,
+   `name`,
+   `description`,
+   `location`,
+   `skill`,
+   `urgency`,
+   `date`
+)
+VALUES
+   (
+       101,
+       1,
+       'Food Drive',
+       'Help organize and distribute food to families in need.',
+       'Community Center, Houston, TX',
+       '["organization", "teamwork"]',
+       2,
+       '2025-05-01 09:00:00'
+   ),
+   (
+       102,
+       1,
+       'Beach Cleanup',
+       'Clean up litter along the shoreline and promote environmental awareness.',
+       'Galveston Beach, TX',
+       '["physical", "environmental"]',
+       3,
+       '2025-06-10 08:30:00'
+   ),
+   (
+       103,
+       1,
+       'Toy Donation Drive',
+       'Collect and distribute toys to children in local shelters.',
+       'Main Street Shelter, Houston, TX',
+       '["organization", "communication"]',
+       1,
+       '2025-06-25 11:00:00'
+   ),
+   (
+       104,
+       1,
+       'Park Restoration',
+       'Assist with planting trees and cleaning public park areas.',
+       'Memorial Park, Houston, TX',
+       '["gardening", "maintenance"]',
+       2,
+       '2025-06-15 10:00:00'
+   );
+
+
+INSERT INTO `volunteer_history` (`volunteer_id`, `event_id`, `type`, `date`)
+VALUES
+   (1, 101, 'assigned', '2025-05-01'),
+   (1, 102, 'participated', '2025-06-10'),
+   (1, 103, 'no-show', '2025-06-25'),
+   (2, 104, 'assigned', '2025-06-15');
+

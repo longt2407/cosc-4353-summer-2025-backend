@@ -1,21 +1,23 @@
-const tempData = [
-    {
-        volunteer_id: 1,
-        events: [
-            { id: 101, event_name: "Beach Cleanup", type: "assigned", date: "2025-05-01" },
-            { id: 102, event_name: "Food Drive", type: "participated", date: "2025-06-10" },
-            { id: 103, event_name: "Park Restoration", type: "no-show", date: "2025-06-25" }
-        ]
-    },
-    {
-        volunteer_id: 2,
-        events: [
-            { id: 104, event_name: "Toy Drive", type: "assigned", date: "2025-06-15" }
-        ]
-    }
-];
+import db from '../controllers/db.js';
+export const getHistoryByVolunteerId = async (conn, volunteer_id) => {
+   const [rows] = await conn.query(`
+       SELECT
+           vh.id,
+           e.name AS event_name,
+           vh.type,
+           vh.date
+       FROM volunteer_history vh
+       JOIN event e ON vh.event_id = e.id
+       WHERE vh.volunteer_id = ?
+       ORDER BY vh.date DESC
+   `, [volunteer_id]);
 
-// Mock function to get volunteer history
-export const getHistoryByVolunteerId = (volunteer_id) => {
-    return tempData.find(v => v.volunteer_id === parseInt(volunteer_id));
+
+   return {
+       volunteer_id: parseInt(volunteer_id),
+       events: rows
+   };
 };
+
+
+

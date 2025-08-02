@@ -1,13 +1,12 @@
 import {getNotifByVolunteerId, markAsRead, createNotif, deleteNotif, /*getGlobalNotifs*/} from "../models/notification.js";
 import httpResp from "../helpers/httpResp.js";
-import db from "../controllers/db.js";
 
 const {Success, Error} = httpResp;
 
-const isAuthorized = (req) => {
+const isAuthorized = (req, volunteerID) => {
     const loggedUserId = req.jwt?.user?.id;
     const role = req.jwt?.user?.role;
-    const targetVolunteerId = parseInt(req.params.id, 10);
+    const targetVolunteerId = parseInt(req.params.id, 10); // read from req.params
 
     return role === 1 || loggedUserId === targetVolunteerId;
 };
@@ -15,13 +14,12 @@ const isAuthorized = (req) => {
 //GET
 export const getAllNotifs = async (req, res) => {
     //console.log("req.jwt: ", req.jwt);
-    const volunteerID = parseInt(req.params.id);
-    if(!isAuthorized(req, volunteerID)) {
-        return Error[403](req, res, new Error("Unauthorized access."));
+    if (!isAuthorized(req)) {
+        return Error[401](req, res, new Error("Unauthorized access."));
     }
 
+    const volunteerID = parseInt(req.params.id); // still needed for the DB query
     const notifs = await getNotifByVolunteerId(volunteerID);
-    //const globalNotifs = getGlobalNotifs();
     return Success[200](req, res, notifs);
 };
 
