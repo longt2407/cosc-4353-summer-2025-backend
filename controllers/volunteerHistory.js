@@ -15,14 +15,13 @@ export const getVolunteerHistory = async (req, res) => {
 
 
        if (!volunteer_id) {
-           //console.log("Missing volunteer_id");
+           console.log("Missing volunteer_id");
            return httpResp.Error[400](req, res, new Error("Volunteer ID is required"));
        }
-
-
+       console.log("Calling db.tx...");
        return tx(req, res, async (conn) => {return await getHistoryByVolunteerId(conn, volunteer_id);});
    }catch(err){
-       //console.log("Caught error:", err);
+       console.log("Caught error:", err);
        return Error[500](req, res, err);
    }
 }

@@ -1,64 +1,92 @@
-import * as reportModel from '../../models/volunteerReport.js';
-import * as reportController from '../../controllers/volunteerReport.js';
+import * as volunteerReportModel from '../../models/volunteerReport.js';
+import * as volunteerReportController from '../../controllers/volunteerReport.js';
+import httpResp from '../../helpers/httpResp.js';
 
-describe('getVolunteerReport', () => {
-  const mockReq = (id) => ({ params: { volunteer_id: id } });
-  const mockRes = () => {
-    const res = {};
-    res.status = jest.fn().mockReturnValue(res);
-    res.json = jest.fn().mockReturnValue(res);
-    res.end = jest.fn().mockReturnValue(res);
-    res.setHeader = jest.fn().mockReturnValue(res);
-    return res;
-  };
+jest.mock('../../models/volunteerReport.js');
 
-  afterEach(() => {
+const { Success, Error } = httpResp;
+
+describe('volunteerReport Controller', () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {};
+    res = {
+      setHeader: jest.fn(),
+      end: jest.fn(),
+      statusCode: 0,
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
     jest.clearAllMocks();
   });
 
-  it('single volunteer report when volunteer_id is provided', async () => {
-    const req = mockReq('1');
-    const res = mockRes();
+  describe('getVolunteerReportAll', () => {
+    test('returns 200 and report data on success', async () => {
+      const fakeReport = [{ volunteer_id: 1, total_assigned_event: 2 }];
+      volunteerReportModel.getVolunteerReport.mockResolvedValue(fakeReport);
 
-    const mockReportData = [
-      { volunteer_id: 1, volunteer_first_name: 'Alice' },
-      { volunteer_id: 2, volunteer_first_name: 'Bob' }
-    ];
+      await volunteerReportController.getVolunteerReportAll(req, res);
 
-    // Mock the getMockReport() to return controlled data
-    jest.spyOn(reportModel, 'getMockReport').mockReturnValue(mockReportData);
+      expect(res.statusCode).toBe(200);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"message":"success"'));
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"volunteer_id":1'));
+    });
 
-    await reportController.getVolunteerReport(req, res);
+    test('returns 500 on model error', async () => {
+      const err = new Error('DB failure');
+      volunteerReportModel.getVolunteerReport.mockRejectedValue(err);  // ensure error object passed correctly
 
-    expect(res.statusCode).toBe(200);
-    expect(res.setHeader).toHaveBeenCalledWith("content-type", "application/json");
-    expect(res.end).toHaveBeenCalledWith(JSON.stringify({message: "success", data: mockReportData[0],}));
+      await volunteerReportController.getVolunteerReportAll(req, res);
+
+      expect(res.statusCode).toBe(500);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"message":"Internal Server Error"'));
+    });
   });
 
-  it('volunteer_id is NOT provided', async () => {
-    const req = { params: {} };
-    const res = mockRes();
+  describe('getVolunteerReportIdController', () => {
+    test('returns 400 if volunteer ID invalid', async () => {
+      req.params = { id: 'abc' };
 
-    await reportController.getVolunteerReport(req, res);
+      await volunteerReportController.getVolunteerReportIdController(req, res);
 
-    expect(res.statusCode).toBe(404);
-    expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Not Found'));
-  });
+      expect(res.statusCode).toBe(400);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Bad Request'));
+    });
 
-  it('volunteer_id no matching report found', async () => {
-    const req = mockReq('99'); // id not in mock data
-    const res = mockRes();
+    test('returns 400 if report not found', async () => {
+      req.params = { id: '1' };
+      volunteerReportModel.getVolunteerReportById.mockResolvedValue(null);
 
-    const mockReportData = [
-      { volunteer_id: 1, volunteer_first_name: 'Alice' },
-      { volunteer_id: 2, volunteer_first_name: 'Bob' }
-    ];
+      await volunteerReportController.getVolunteerReportIdController(req, res);
 
-    jest.spyOn(reportModel, 'getMockReport').mockReturnValue(mockReportData);
+      expect(res.statusCode).toBe(400);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Bad Request'));
+    });
 
-    await reportController.getVolunteerReport(req, res);
+    test('returns 200 and report data on success', async () => {
+      const fakeReport = [{ volunteer_id: 1, total_assigned_event: 3 }];
+      req.params = { id: '1' };
+      volunteerReportModel.getVolunteerReportById.mockResolvedValue(fakeReport);
 
-    expect(res.statusCode).toBe(404);
-    expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Not Found'));
+      await volunteerReportController.getVolunteerReportIdController(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"message":"success"'));
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"volunteer_id":1'));
+    });
+
+    test('returns 500 on model error', async () => {
+      const err = new Error('DB error');
+      req.params = { id: '1' };
+      volunteerReportModel.getVolunteerReportById.mockRejectedValue(err);
+
+      await volunteerReportController.getVolunteerReportIdController(req, res);
+
+      expect(res.statusCode).toBe(500);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining('"Internal Server Error"'));
+    });
+
+
   });
 });

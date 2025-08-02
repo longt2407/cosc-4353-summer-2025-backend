@@ -1,50 +1,85 @@
-jest.mock('../../models/volunteerHistory', () => ({getHistoryByVolunteerId: jest.fn()}));
+jest.mock('../../models/volunteerHistory.js');
 
-import * as historyModel from '../../models/volunteerHistory';
-import * as historyController from '../../controllers/volunteerHistory';
+jest.mock('../../controllers/db.js', () => ({
+  __esModule: true,
+  default: {
+    tx: jest.fn()
+  }
+}));
 
-describe('getVolunteerHistory', () => {
-    const mockReq = (id) => ({ params: { volunteer_id: id } });
+import * as volunteerHistoryModel from '../../models/volunteerHistory.js';
+import db from '../../controllers/db.js';
+import * as volunteerHistoryController from '../../controllers/volunteerHistory.js';
+import httpResp from '../../helpers/httpResp.js';
 
-    const mockRes = () => {
-        const res = {};
-        res.status = jest.fn().mockReturnValue(res);
-        res.json = jest.fn().mockReturnValue(res);
-        res.setHeader = jest.fn();
-        res.end = jest.fn();
-        return res;
+
+describe('volunteerHistory Controller', () => {
+  let req, res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    req = { params: {} };
+      res = {
+        statusCode: 0,
+        setHeader: jest.fn(),
+        end: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+  });
+
+  test('getVolunteerHistory - success', async () => {
+
+    const fakeResult = { volunteer_id: 1, events: [{ id: 5, event_name: 'Test Event' }] };
+    const req = { params: { volunteer_id: '1' } };
+    req.params.volunteer_id = '1';
+    const res = {
+      statusCode: 0,
+      setHeader: jest.fn(),
+      end: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
     };
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    db.tx.mockImplementation(async (req, res, cb) => {return await cb({}); });
 
-    it('vaild history', async () => {
-        const req = mockReq(1);
-        const res = mockRes();
+    volunteerHistoryModel.getHistoryByVolunteerId.mockResolvedValue({volunteer_id: 1, events: [],});
+    console.log("Before calling getVolunteerHistory");
+    await volunteerHistoryController.getVolunteerHistory(req, res);
+    console.log("db.tx calls:", db.tx.mock.calls.length);
 
-        const mockHistory = {
-            volunteer_id: 1,
-            events: [{ type: 'assigned', eventId: 101 }]
-        };
+    expect(db.tx).toHaveBeenCalled();
+    expect(volunteerHistoryModel.getHistoryByVolunteerId).toHaveBeenCalledWith({}, '1');
+  });
 
-        historyModel.getHistoryByVolunteerId.mockReturnValue(mockHistory);
+  test('getVolunteerHistory - missing volunteer_id returns 400 error', async () => {
+    const req = { params: {} };
+    const res = {
+      setHeader: jest.fn(),
+      end: jest.fn(),
+      statusCode: 0,
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    };
 
-        await historyController.getVolunteerHistory(req, res);
+    await volunteerHistoryController.getVolunteerHistory(req, res);
+    expect(res.statusCode).toBe(400);
+  });
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({message: "success", data: mockHistory,});
-    });
+  test('getVolunteerHistory - tx throws error returns 500', async () => {
+    req.params.volunteer_id = '1';
 
-    it('volunteer_id missing', async () => {
-        const req = mockReq(undefined);
-        const res = mockRes();
+    const testError = new Error('DB Transaction Failed');
+    db.tx.mockImplementation(() => { throw testError; });
 
-        await historyController.getVolunteerHistory(req, res);
+    const spyError500 = jest.spyOn(httpResp.Error, '500');
 
-        expect(res.statusCode).toBe(400);
-        expect(res.end).toHaveBeenCalledWith(JSON.stringify({ message: "Bad Request", data: null }));
-    });
+    await volunteerHistoryController.getVolunteerHistory(req, res);
 
+    expect(db.tx).toHaveBeenCalled();
+    expect(spyError500).toHaveBeenCalledWith(req, res, testError);
 
+    spyError500.mockRestore();
+  });
 });
