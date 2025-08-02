@@ -36,6 +36,15 @@ async function updateProfile(req, res) {
     return httpResp.Success[200](req, res, {});
 }
 
+async function getAll(req, res) {
+    return httpResp.Success[200](req, res, {});
+
+}
+
+async function getOne(req, res) {
+    return httpResp.Success[200](req, res, {});
+}
+
 export default {
     ...jest.requireActual("../admin.js").default,
     login,
@@ -46,5 +55,7 @@ export default {
     updatePassword,
     updateQuestionAndAnswer,
     getProfile,
-    updateProfile
+    updateProfile,
+    getAll,
+    getOne
 }
