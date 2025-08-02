@@ -15,6 +15,7 @@ const isAuthorized = (req, volunteerID) => {
 export const getAllNotifs = async (req, res) => {
     //console.log("req.jwt: ", req.jwt);
     if (!isAuthorized(req)) {
+        //console.log('Unauthorized triggered');
         return Error[401](req, res, new Error("Unauthorized access."));
     }
 
