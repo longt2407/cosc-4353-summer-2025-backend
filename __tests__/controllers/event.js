@@ -146,3 +146,49 @@ test("eventController.getOneByAdminId", async () => {
     let data = await eventController.getOneByAdminId(req, res);
     expect(res.statusCode).toBe(200);
 });
+
+// updateParticipatedStatus
+test("eventController.updateParticipatedStatus", async () => {
+    let req = {
+        body: {
+            volunteer_id: 1
+        },
+        params: {
+            id: 1
+        },
+        jwt: {
+            user: {
+                id: 1
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await eventController.updateParticipatedStatus(req, res);
+    expect(res.statusCode).toBe(200);
+});
+
+// updateNoShowStatus
+test("eventController.updateNoShowStatus", async () => {
+    let req = {
+        body: {
+            volunteer_id: 1
+        },
+        params: {
+            id: 1
+        },
+        jwt: {
+            user: {
+                id: 1
+            }
+        }
+    };
+    let res = {
+        setHeader: jest.fn().mockReturnThis(),
+        end: jest.fn().mockReturnThis()
+    };
+    let data = await eventController.updateNoShowStatus(req, res);
+    expect(res.statusCode).toBe(200);
+});
