@@ -56,7 +56,7 @@ async function assignVolunteer(conn, eventId, volunteerId, adminId) {
         `You are assigned to the event: ${event.name}. Please check your history for more detail.`
     ];
     await conn.query(sql_3, params_3);
-    return 1;
+    return null;
 }
 
 async function dropVolunteer(conn, eventId, volunteerId, adminId) {
@@ -93,7 +93,7 @@ async function dropVolunteer(conn, eventId, volunteerId, adminId) {
         `You are removed from the event: ${event.name}. Please contact admin (${event.admin.email}) for more detail.`
     ];
     await conn.query(sql_3, params_3);
-    return 1;
+    return null;
 }
 
 export default {

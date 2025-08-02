@@ -204,7 +204,7 @@ async function deleteOne(conn, id, admin_id) {
     let sql_3 = "DELETE FROM event WHERE id = ?";
     let params_3 = [data.id];
     await conn.query(sql_3, params_3);
-    return 1;
+    return null;
 }
 
 async function getOneByAdminId(conn, id, admin_id) {
@@ -224,6 +224,9 @@ async function getOneByAdminId(conn, id, admin_id) {
 export default {
     validator,
     prepare,
+    include,
+    parse,
+    stringify,
     getAllByAdminId,
     getOne,
     createOne,
