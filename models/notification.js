@@ -7,7 +7,7 @@ export const getNotifByVolunteerId = async (volunteer_id) => {
 };
 
 export const markAsRead = async (id) => {
-    await db.pool.query("UPDATE notification SET status = 1, updated_at = NOW() WHERE id = ?", [id]);
+    await db.pool.query("UPDATE notification SET status = 1 WHERE id = ?", [id]);
     const [rows] = await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND id = ?", [id]);
 
     return rows[0];
@@ -29,7 +29,7 @@ export const createNotif = async(data) => {
 }
 
 export const deleteNotif = async (id) => {
-    await db.pool.query("UPDATE notification SET is_deleted = true, updated_at = NOW(), deleted_at = NOW() WHERE id = ?", [id]);
+    await db.pool.query("UPDATE notification SET is_deleted = true, deleted_at = NOW() WHERE id = ?", [id]);
 
     const [rows] = await db.pool.query("SELECT * FROM notification WHERE id = ?", [id]);
     return rows[0];
