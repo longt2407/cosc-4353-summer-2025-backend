@@ -77,6 +77,28 @@ async function getOneByAdminId(req, res) {
     });
 }
 
+async function updateParticipatedStatus(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let body = req.body;
+        let volunteerId = body.volunteer_id;
+        let [eventId] = utils.parseStr(req.params.id);
+        let adminId = req.jwt.user.id;
+        await volunteerEventModel.updateParticipatedStatus(conn, eventId, volunteerId, adminId);
+        return null;
+    });
+}
+
+async function updateNoShowStatus(req, res) {
+    await db.tx(req, res, async (conn) => {
+        let body = req.body;
+        let volunteerId = body.volunteer_id;
+        let [eventId] = utils.parseStr(req.params.id);
+        let adminId = req.jwt.user.id;
+        await volunteerEventModel.updateNoShowStatus(conn, eventId, volunteerId, adminId);
+        return null;
+    });
+}
+
 export default {
     getAllByAdminId,
     createOne,
@@ -84,5 +106,7 @@ export default {
     deleteOne,
     assignVolunteer,
     dropVolunteer,
-    getOneByAdminId
+    getOneByAdminId,
+    updateParticipatedStatus,
+    updateNoShowStatus
 }

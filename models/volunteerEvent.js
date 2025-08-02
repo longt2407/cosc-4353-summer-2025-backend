@@ -29,6 +29,7 @@ async function assignVolunteer(conn, eventId, volunteerId, adminId) {
         admin_id: adminId
     });
     validator.validate(data);
+    // make sure event exist and admin valid
     let event = await eventModel.getOne(conn, data.event_id);
     if (!event){
         throw new HttpError({ statusCode: 400, message: "Event not found." })
@@ -66,6 +67,7 @@ async function dropVolunteer(conn, eventId, volunteerId, adminId) {
         admin_id: adminId
     });
     validator.validate(data);
+    // make sure event exist and admin valid
     let event = await eventModel.getOne(conn, data.event_id);
     if (!event){
         throw new HttpError({ statusCode: 400, message: "Event not found." })
@@ -96,8 +98,68 @@ async function dropVolunteer(conn, eventId, volunteerId, adminId) {
     return null;
 }
 
+async function updateParticipatedStatus(conn, eventId, volunteerId, adminId) {
+    let data = utils.objectAssign(['event_id', 'volunteer_id', 'admin_id'], { 
+        event_id: eventId, 
+        volunteer_id: volunteerId, 
+        admin_id: adminId
+    });
+    validator.validate(data);
+    // make sure event exist and admin valid
+    let event = await eventModel.getOne(conn, data.event_id);
+    if (!event){
+        throw new HttpError({ statusCode: 400, message: "Event not found." })
+    }
+    if (event.admin_id != data.admin_id){
+        throw new HttpError({statusCode: 401});
+    }
+    // make sure the volunteer is assigned to event
+    let sql_1 = "SELECT * FROM volunteer_event WHERE volunteer_id = ? AND event_id = ? AND is_deleted = ?";
+    let params_1 = [data.volunteer_id, data.event_id, false];
+    const [rows] = await conn.query(sql_1, params_1);
+    if (!rows[0]){
+        throw new HttpError({ statusCode: 400, message: "Volunteer is not assigned to event." })
+    }
+    // mark volunteer participate
+    let sql_2 = "UPDATE volunteer_event SET status = ? WHERE volunteer_id = ? AND event_id = ?";
+    let params_2 = [1, data.volunteer_id, data.event_id];
+    await conn.query(sql_2, params_2);
+    return null;
+}
+
+async function updateNoShowStatus(conn, eventId, volunteerId, adminId) {
+    let data = utils.objectAssign(['event_id', 'volunteer_id', 'admin_id'], { 
+        event_id: eventId, 
+        volunteer_id: volunteerId, 
+        admin_id: adminId
+    });
+    validator.validate(data);
+    // make sure event exist and admin valid
+    let event = await eventModel.getOne(conn, data.event_id);
+    if (!event){
+        throw new HttpError({ statusCode: 400, message: "Event not found." })
+    }
+    if (event.admin_id != data.admin_id){
+        throw new HttpError({statusCode: 401});
+    }
+    // make sure the volunteer is assigned to event
+    let sql_1 = "SELECT * FROM volunteer_event WHERE volunteer_id = ? AND event_id = ? AND is_deleted = ?";
+    let params_1 = [data.volunteer_id, data.event_id, false];
+    const [rows] = await conn.query(sql_1, params_1);
+    if (!rows[0]){
+        throw new HttpError({ statusCode: 400, message: "Volunteer is not assigned to event." })
+    }
+    // mark volunteer no-show
+    let sql_2 = "UPDATE volunteer_event SET status = ? WHERE volunteer_id = ? AND event_id = ?";
+    let params_2 = [2, data.volunteer_id, data.event_id];
+    await conn.query(sql_2, params_2);
+    return null;
+}
+
 export default {
     validator,
     assignVolunteer,
-    dropVolunteer
+    dropVolunteer,
+    updateParticipatedStatus,
+    updateNoShowStatus
 }

@@ -72,6 +72,8 @@ app.patch("/event/:id", auth.is(auth.ADMIN), eventController.updateOne);
 app.delete("/event/:id", auth.is(auth.ADMIN), eventController.deleteOne);
 app.patch("/event/:id/assign", auth.is(auth.ADMIN), eventController.assignVolunteer)
 app.patch("/event/:id/drop", auth.is(auth.ADMIN), eventController.dropVolunteer)
+app.patch("/event/:id/status/participated", auth.is(auth.ADMIN), eventController.updateParticipatedStatus)
+app.patch("/event/:id/status/noshow", auth.is(auth.ADMIN), eventController.updateNoShowStatus)
 
 // Notification
 app.use('/notification', notificationRoutes);
