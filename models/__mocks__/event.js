@@ -61,7 +61,39 @@ async function getOne(conn, id) {
     return rows[0] || null;
 }
 
+async function getAllByAdminId(conn, admin_id){
+    let rows = mockEvent.filter((e) => {
+        return e.admin_id === admin_id;
+    })
+    return rows;
+}
+
+async function createOne(conn, event) {
+    return 1;
+}
+
+async function updateOne(conn, newEvent) {
+    return 1;
+}
+
+async function deleteOne(conn, id, admin_id) {
+    return null;
+}
+
+async function getOneByAdminId(conn, id, admin_id) {
+    let rows = mockEvent.filter((e) => {
+        return e.id = id && e.admin_id === admin_id;
+    })
+    return rows[0] || null;
+}
+
 export default {
     ...jest.requireActual("../event.js").default,
-    getOne
+    getOne,
+    getAllByAdminId,
+    getOne,
+    createOne,
+    updateOne,
+    deleteOne,
+    getOneByAdminId
 }
