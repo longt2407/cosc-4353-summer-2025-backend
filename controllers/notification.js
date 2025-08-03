@@ -1,5 +1,6 @@
-import {getNotifByVolunteerId, markAsRead, createNotif, deleteNotif, /*getGlobalNotifs*/} from "../models/notification.js";
+import {getNotifByVolunteerId, markAsRead, createNotif, deleteNotif, getUnreadCountByVolunteerId} from "../models/notification.js";
 import httpResp from "../helpers/httpResp.js";
+import db from "../controllers/db.js";
 
 const {Success, Error} = httpResp;
 
@@ -22,6 +23,19 @@ export const getAllNotifs = async (req, res) => {
     const volunteerID = parseInt(req.params.id); // still needed for the DB query
     const notifs = await getNotifByVolunteerId(volunteerID);
     return Success[200](req, res, notifs);
+};
+
+//GET for unread count
+export const getUnreadNotifs = async (req, res) => {
+    const volunteerID = parseInt(req.params.volunteer_id);
+    if (!volunteerID) return httpResp.Error[400](req, res, new Error("Invalid volunteer_id"));
+
+    try {
+        const count = await getUnreadCountByVolunteerId(volunteerID);
+        httpResp.Success[200](req, res, { unreadCount: count });
+    } catch (err) {
+        httpResp.Error.default(req, res, err);
+    }
 };
 
 //PUT
