@@ -77,6 +77,7 @@ app.patch("/event/:id/status/noshow", auth.is(auth.ADMIN), eventController.updat
 
 // Notification
 app.use('/notification', notificationRoutes);
+app.use('/notifications', notificationRoutes);
 
 // *
 app.use(httpResp.Error[404]);

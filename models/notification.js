@@ -6,6 +6,12 @@ export const getNotifByVolunteerId = async (volunteer_id) => {
     return rows;
 };
 
+export const getUnreadCountByVolunteerId = async (volunteer_id) => {
+    const [rows] = await db.pool.query("SELECT COUNT(*) AS unreadCount FROM notification WHERE volunteer_id = ? AND status = 0 AND is_deleted = false", [volunteer_id]);
+
+    return rows[0].unreadCount;
+};
+
 export const markAsRead = async (id) => {
     await db.pool.query("UPDATE notification SET status = 1 WHERE id = ?", [id]);
     const [rows] = await db.pool.query("SELECT * FROM notification WHERE is_deleted = false AND id = ?", [id]);

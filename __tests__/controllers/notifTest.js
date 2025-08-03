@@ -87,4 +87,24 @@ describe('Notification Controller', () => {
         expect(result.statusCode).toBe(200);
         expect(notifModel.createNotif).toHaveBeenCalledWith(req.body);
     })
+
+    test('markAsReadNotification - invalid id param', async () => {
+  const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
+  const res = mockResults();
+
+  await notifController.markAsReadNotif(req, res);
+
+  expect(res.statusCode).toBe(200);
+  expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Not Found"));
+});
+
+test('deleteNotification - invalid id param', async () => {
+  const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
+  const res = mockResults();
+
+  await notifController.deleteNotifById(req, res);
+
+  expect(res.statusCode).toBe(200);
+  expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Invalid notification ID"));
+});
 });
