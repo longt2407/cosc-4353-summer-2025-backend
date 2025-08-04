@@ -5,6 +5,8 @@ import volunteerModel from "../models/volunteer.js";
 import volunteerVerificationModel from "../models/volunteerVerification.js";
 import eventModel from "../models/event.js";
 import utils from "../helpers/utils.js";
+import leven from "leven";
+import moment from "moment";
 
 async function login(req, res) {
     await db.tx(req, res, async (conn) => {
@@ -149,7 +151,45 @@ async function getAllMatchedByEventId(req, res) {
             throw new HttpError({ statusCode: 401 });
         }
         let volunteers = await volunteerModel.getAll(conn);
-        return volunteers;
+        // Calculate using Levenshtein algorithm
+        let calcSimilarity = (str1, str2) => {
+            return 1 - leven(str1, str2) / Math.max(str1.length, str2.length)
+        }
+        // Init matching score
+        for (let v of volunteers) {
+            v.matching_score = 0;
+        }
+        // Matching address
+        let eventAddr = event.location.trim().toLowerCase();
+        for (let v of volunteers) {
+            let vAddr = [v.address_1, v.address_2, v.address_city, v.address_state, v.address_zip].join("").trim().toLowerCase();
+            v.matching_score += calcSimilarity(vAddr, eventAddr);
+        }
+        // Matching availability
+        for (let v of volunteers) {
+            let match = v.availability.find((a) => moment(a).isSame(event.date, "day"));
+            if (match) {
+                v.matching_score += 1;
+            }
+        }
+        // Matching skill
+        for (let v of volunteers) {
+            let count = 0;
+            let cloneEventSkill = event.skill.slice();
+            for (let s of v.skill) {
+                let similarities = cloneEventSkill.map((es) => calcSimilarity(es.toLowerCase(), s.toLowerCase()));
+                let m = Math.max(...similarities);
+                if (m > 0.6) {
+                    cloneEventSkill.splice(similarities.indexOf(m), 1);
+                    count = count + 1;
+                }
+                if (count == event.skill.length) {
+                    break;
+                }
+            }
+            v.matching_score += count / event.skill.length;
+        }
+        return volunteers.sort((a, b) => b.matching_score - a.matching_score);
     });
 }
 
