@@ -38,7 +38,7 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '2',
-    '456 Street Dr',
+    '456 Abc Dr',
     'Austin',
     'TX',
     '70000',
@@ -52,7 +52,7 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '3',
-    '789 Street Dr',
+    '789 Fgh St',
     'Austin',
     'TX',
     '70000',
@@ -66,8 +66,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '4',
-    '012 Street Dr',
-    'Austin',
+    '012 Bcd Ln',
+    'Dallas',
     'TX',
     '70000',
     '["communication","leader"]',
@@ -80,8 +80,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '5',
-    '345 Street Dr',
-    'Austin',
+    '345 Agh Rd',
+    'Houston',
     'TX',
     '70000',
     '["communication","technology"]',
@@ -94,8 +94,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '6',
-    '678 Street Dr',
-    'Austin',
+    '678 Bde Dr',
+    'Waco',
     'TX',
     '70000',
     '["strong","leader"]',
@@ -108,8 +108,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '7',
-    '901 Street Dr',
-    'Austin',
+    '901 Def Dr',
+    'Dallas',
     'TX',
     '70000',
     '["strong"]',
@@ -122,8 +122,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '8',
-    '234 Street Dr',
-    'Austin',
+    '234 Afh Rd',
+    'Houston',
     'TX',
     '70000',
     '["leader"]',
@@ -136,7 +136,7 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '9',
-    '567 Street Dr',
+    '567 Jkl Dr',
     'Austin',
     'TX',
     '70000',
@@ -150,8 +150,8 @@ VALUES
     '$2b$10$Z0Xgpf4pyqYjTH9.foRvZOA1J1npBk61HdMINYLJBNjJ3UrEVCqwu', -- 2
     'volunteer',
     '10',
-    '890 Street Dr',
-    'Austin',
+    '890 Xyz St',
+    'Waco',
     'TX',
     '70000',
     '["communication"]',
