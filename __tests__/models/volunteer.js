@@ -165,6 +165,15 @@ test("volunteerModel.validate - error 3", async () => {
     expect(fn).toThrow();
 });
 
+test("volunteerModel.validate - error 4", async () => {
+    let fn = () => {
+        volunteerModel.validator.validate({
+            address_state: "TT"
+        });
+    } 
+    expect(fn).toThrow();
+});
+
 // getOneByEmail
 test("volunteerModel.getOneByEmail 1", async () => {
     let conn = {
