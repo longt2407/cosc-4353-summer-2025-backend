@@ -40,7 +40,7 @@ export const getUnreadNotifs = async (req, res) => {
 
 //PUT
 export const markAsReadNotif = async (req, res) => {
-    const notifID = parseInt(req.params.id);
+    const notifID = parseInt(req.params.nid);
     const loggedUser = req.jwt?.user;
 
     const notifUpdate = markAsRead(notifID, loggedUser.id);
@@ -53,7 +53,7 @@ export const markAsReadNotif = async (req, res) => {
 
 //DELETE
 export const deleteNotifById = async (req, res) => {
-    const notifID = parseInt(req.params.id);
+    const notifID = parseInt(req.params.nid);
     const loggedUser = req.jwt?.user;
 
     const notifRemoved = await deleteNotif(notifID);

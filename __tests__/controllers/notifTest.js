@@ -46,7 +46,7 @@ describe('Notification Controller', () => {
 
     test('markAsReadNotification', async () => {
         const updatedNotif = {id: 5, read: true};
-        const req = {jwt: {user: {id: 1, role: 0}}, params: {id: "5"}};
+        const req = {jwt: {user: {id: 1, role: 0}}, params: {nid: "5"}};
 
         const result = mockResults();
         notifModel.markAsRead.mockReturnValue(updatedNotif);
@@ -58,7 +58,7 @@ describe('Notification Controller', () => {
     });
 
     test('deleteNotification', async () => {
-        const req = {jwt: {user: {id: 1, role: 0}}, params: {id: "5"}};
+        const req = {jwt: {user: {id: 1, role: 0}}, params: {nid: "5"}};
 
         const result = mockResults();
 

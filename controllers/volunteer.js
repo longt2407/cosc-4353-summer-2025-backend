@@ -5,7 +5,7 @@ import volunteerModel from "../models/volunteer.js";
 import volunteerVerificationModel from "../models/volunteerVerification.js";
 import eventModel from "../models/event.js";
 import utils from "../helpers/utils.js";
-import leven from "leven";
+import levenshtein from "js-levenshtein";
 import moment from "moment";
 
 async function login(req, res) {
@@ -153,7 +153,7 @@ async function getAllMatchedByEventId(req, res) {
         let volunteers = await volunteerModel.getAll(conn);
         // Calculate using Levenshtein algorithm
         let calcSimilarity = (str1, str2) => {
-            return 1 - leven(str1, str2) / Math.max(str1.length, str2.length)
+            return 1 - levenshtein(str1, str2) / Math.max(str1.length, str2.length)
         }
         // Init matching score
         for (let v of volunteers) {
