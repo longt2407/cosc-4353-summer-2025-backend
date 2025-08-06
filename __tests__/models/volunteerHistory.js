@@ -20,11 +20,8 @@ describe('volunteerHistory Model', () => {
 
     const result = await getHistoryByVolunteerId(mockConn, volunteerId);
 
-    expect(mockConn.query).toHaveBeenCalledWith(expect.stringContaining('WHERE vh.volunteer_id = ?'), [volunteerId]);
-    expect(result).toEqual({
-      volunteer_id: volunteerId,
-      events: fakeRows,
-    });
+    expect(mockConn.query).toHaveBeenCalledWith(expect.stringContaining('WHERE ve.volunteer_id = ?'), [volunteerId]);
+    expect(result).toEqual({volunteer_id: volunteerId, events: fakeRows,});
   });
 
   test('getHistoryByVolunteerId throws error if query fails', async () => {

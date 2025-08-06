@@ -22,7 +22,7 @@ export const getVolunteerHistory = async (req, res) => {
                 throw new Error("No history found for volunteer");
             }
 
-            return history;
+            return Success[200](req, res, history);
         });
     }catch(err){
         //console.log("Caught error:", err);
