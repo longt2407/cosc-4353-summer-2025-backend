@@ -42,15 +42,18 @@ describe('volunteerHistory Controller', () => {
       json: jest.fn()
     };
 
-    db.tx.mockImplementation(async (req, res, cb) => {return await cb({}); });
+    db.tx.mockImplementation(async (req, res, cb) => {return await cb({});});
 
-    volunteerHistoryModel.getHistoryByVolunteerId.mockResolvedValue({volunteer_id: 1, events: [],});
-    console.log("Before calling getVolunteerHistory");
+    volunteerHistoryModel.getHistoryByVolunteerId.mockResolvedValue(fakeResult);
+    const spySuccess200 = jest.spyOn(httpResp.Success, '200');
+    //console.log("Before calling getVolunteerHistory");
     await volunteerHistoryController.getVolunteerHistory(req, res);
-    console.log("db.tx calls:", db.tx.mock.calls.length);
+    //console.log("db.tx calls:", db.tx.mock.calls.length);
 
     expect(db.tx).toHaveBeenCalled();
     expect(volunteerHistoryModel.getHistoryByVolunteerId).toHaveBeenCalledWith({}, '1');
+    expect(spySuccess200).toHaveBeenCalledWith(req, res, fakeResult);
+    spySuccess200.mockRestore();
   });
 
   test('getVolunteerHistory - missing volunteer_id returns 400 error', async () => {

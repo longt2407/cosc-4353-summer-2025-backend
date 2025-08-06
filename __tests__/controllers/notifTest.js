@@ -89,22 +89,69 @@ describe('Notification Controller', () => {
     })
 
     test('markAsReadNotification - invalid id param', async () => {
-  const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
-  const res = mockResults();
+      const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
+      const res = mockResults();
 
-  await notifController.markAsReadNotif(req, res);
+      await notifController.markAsReadNotif(req, res);
 
-  expect(res.statusCode).toBe(200);
-  expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Not Found"));
-});
+      expect(res.statusCode).toBe(400);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Bad Request"));
+    });
 
-test('deleteNotification - invalid id param', async () => {
-  const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
-  const res = mockResults();
+    test('deleteNotification - invalid id param', async () => {
+      const req = { jwt: { user: { id: 1, role: 0 } }, params: { id: "abc" } };
+      const res = mockResults();
 
-  await notifController.deleteNotifById(req, res);
+      await notifController.deleteNotifById(req, res);
 
-  expect(res.statusCode).toBe(200);
-  expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Invalid notification ID"));
-});
+      expect(res.statusCode).toBe(400);
+      expect(res.end).toHaveBeenCalledWith(expect.stringContaining("Bad Request"));
+    });
+
+    test('getAllNotifs - authorized as admin (role 1)', async () => {
+        const req = { jwt: { user: { id: 99, role: 1 } }, params: { id: '5' } };
+        const res = mockResults();
+
+        notifModel.getNotifByVolunteerId.mockResolvedValue([]);
+
+        await notifController.getAllNotifs(req, res);
+
+        expect(res.statusCode).toBe(200);
+        expect(notifModel.getNotifByVolunteerId).toHaveBeenCalledWith(5);
+    });
+
+    test('markAsReadNotif - notif not found returns 404 error', async () => {
+        const req = { jwt: { user: { id: 1, role: 0 } }, params: { nid: '10' } };
+        const res = mockResults();
+
+        notifModel.markAsRead.mockReturnValue(null);
+
+        await notifController.markAsReadNotif(req, res);
+
+        expect(res.statusCode).toBe(404);
+        expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Not Found'));
+    });
+
+    test('deleteNotifById - unauthorized deletion returns 400 error', async () => {
+        const req = { jwt: { user: { id: 2, role: 0 } }, params: { nid: '15' } };
+        const res = mockResults();
+
+        notifModel.deleteNotif.mockResolvedValue({ id: 15, volunteer_id: 1 });
+
+        await notifController.deleteNotifById(req, res);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Bad Request'));
+    });
+
+
+    test('createNewNotif - missing fields returns 400 error', async () => {
+        const req = {jwt: { user: { id: 1, role: 0 } }, body: { volunteer_id: 1, type: 1, title: '' }};
+        const res = mockResults();
+
+        await notifController.createNewNotif(req, res);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.end).toHaveBeenCalledWith(expect.stringContaining('Bad Request'));
+    });
 });
