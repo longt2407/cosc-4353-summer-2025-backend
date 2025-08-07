@@ -153,10 +153,10 @@ async function exportEventPdf(req, res) {
         doc.moveDown();
         doc.font("Times-Roman");
         doc.text(`Name: ${event.name}`, { align: "left" });
-        doc.text(`Location ${event.location}`, { align: "left" });
+        doc.text(`Location: ${event.location}`, { align: "left" });
         doc.text(`Date: ${new Date(event.date).toLocaleDateString()}`, { align: "left" });
         doc.text(`Urgency: ${event.urgency }`, { align: "left" });
-        doc.text(`Required Skills: ${event.skill.join(", ")}`, { align: "left" });
+        doc.text(`Required skills: ${event.skill.join(", ")}`, { align: "left" });
         doc.text(`Description: ${event.description}`, { align: "left" });
         doc.moveDown();
         doc.font("Times-Bold").text(`Assigned Volunteers`, { align: "left" });
@@ -226,7 +226,7 @@ async function exportEventCsv(req, res) {
         if (event.admin_id !== adminId) {
             throw new HttpError({ statusCode: 401 });
         }
-        let fileName = `event_${adminId}_${event.id}_${now.getTime()}.pdf`;
+        let fileName = `event_${adminId}_${event.id}_${now.getTime()}.csv`;
         let volunteers = await volunteerModel.getAllAssignedByEventId(conn, event.id);
         for (let volunteer of volunteers) {
             if (volunteer.status === 0) volunteer.status = "assigned";
