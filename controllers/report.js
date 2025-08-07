@@ -135,6 +135,9 @@ async function exportEventPdf(req, res) {
             if (volunteer.status === 1) volunteer.status = "participated"; 
             if (volunteer.status === 2) volunteer.status = "no-show"; 
         }
+        if (event.urgency === 0) event.urgency = "low";
+        if (event.urgency === 1) event.urgency = "medium";
+        if (event.urgency === 2) event.urgency = "high";
 
         const doc = new PDFDocument({
             size: "LETTER",
@@ -146,11 +149,21 @@ async function exportEventPdf(req, res) {
         });
         doc.pipe(fs.createWriteStream(path.resolve(DIR_REPORTS, fileName)));
         doc.fontSize(10);
-        doc.font("Times-Bold").text(`EVENT REPORT (${now.toISOString()})`, {
-            align: "center"
-        });
+        doc.font("Times-Bold").text(`EVENT REPORT (${now.toISOString()})`, { align: "center" });
+        doc.moveDown();
+        doc.text(`Event Details`, { align: "left" });
         doc.moveDown();
         doc.font("Times-Roman");
+        doc.text(`Name: ${event.name}`, { align: "left" });
+        doc.text(`Location ${event.location}`, { align: "left" });
+        doc.text(`Date: ${new Date(event.date).toLocaleDateString()}`, { align: "left" });
+        doc.text(`Urgency: ${event.urgency }`, { align: "left" });
+        doc.text(`Required Skills: ${event.skill.join(", ")}`, { align: "left" });
+        doc.text(`Description: ${event.description}`, { align: "left" });
+        doc.moveDown();
+        doc.font("Times-Bold").text(`Assigned Volunteers`, { align: "left" });
+        doc.font("Times-Roman");
+        doc.moveDown();
         doc.table({
             columnStyles: (i) => {
                 if (i === 0) return { width: 30, align: { x: "center", y: "center" } };
