@@ -508,3 +508,14 @@ test("volunteerModel.getAllAssignedByEventId 1", async () => {
     expect(data).toEqual(cloneMockVolunteer);
 });
 
+// getReportData
+test("volunteerModel.getReportData 1", async () => {
+    let conn = {
+        query: jest.fn()
+            .mockResolvedValueOnce([cloneMockVolunteer])
+    };
+    let eventId = 1;
+    let data = await volunteerModel.getReportData(conn);
+    expect(data).toEqual(cloneMockVolunteer);
+});
+

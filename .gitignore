@@ -1,6 +1,7 @@
 # Custom
 *.env 
 .DS_Store
+reports/*
 
 # Logs
 logs

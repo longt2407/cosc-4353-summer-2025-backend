@@ -10,6 +10,7 @@ import testController from "./controllers/test.js";
 import volunteerController from "./controllers/volunteer.js";
 import adminController from "./controllers/admin.js";
 import eventController from "./controllers/event.js";
+import reportController from "./controllers/report.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import volunteerRoutes from "./routes/volunteerReport.js";
 import volunteerHistoryRoutes from "./routes/volunteerHistoryRoute.js";
@@ -78,6 +79,13 @@ app.patch("/event/:id/status/noshow", auth.is(auth.ADMIN), eventController.updat
 // Notification
 app.use('/notification', notificationRoutes);
 app.use('/notifications', notificationRoutes);
+
+// Report
+app.post("/report/volunteer/pdf", auth.is(auth.ADMIN), reportController.exportVolunteerPdf);
+app.post("/report/volunteer/csv", auth.is(auth.ADMIN), reportController.exportVolunteerCsv);
+app.post("/report/event/:id/pdf", auth.is(auth.ADMIN), reportController.exportEventPdf);
+app.post("/report/event/:id/csv", auth.is(auth.ADMIN), reportController.exportEventCsv);
+app.get("/report/download", auth.is(auth.ADMIN), reportController.download);
 
 // *
 app.use(httpResp.Error[404]);

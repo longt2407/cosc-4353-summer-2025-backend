@@ -101,6 +101,20 @@ async function getAll(conn) {
 }
 
 async function getAllAssignedByEventId(conn, event_id) {
+    return [{
+        ...mockVolunteer[0],
+        status: 0
+    }, {
+        ...mockVolunteer[1],
+        status: 1
+    }, {
+        ...mockVolunteer[1],
+        id: 100,
+        status: 2
+    }];
+}
+
+async function getReportData(conn) {
     return mockVolunteer;
 }
 
@@ -115,5 +129,6 @@ export default {
     updateQuestionAndAnswer,
     updateOne,
     getAll,
-    getAllAssignedByEventId
+    getAllAssignedByEventId,
+    getReportData
 }

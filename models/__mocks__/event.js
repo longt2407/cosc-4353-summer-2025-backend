@@ -20,7 +20,7 @@ const mockEvent = [{
     location: "Location A",
     skill: ["communication","technology","leader"],
     urgency: 0,
-    date: new Date(),
+    date: new Date("2025-07-31T07:11:19.409Z"),
     is_deleted: false,
     created_at: new Date(),
     updated_at: new Date(),

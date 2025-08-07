@@ -29,13 +29,19 @@ In project directory, execute the following commands.
     cp .env.example .env
     ```
 
-3. **Run the development server:**
+3. **Create reports folder:**
+
+    ```sh
+    mkdir reports
+    ```
+
+4. **Run the development server:**
 
     ```sh
     npm run dev
     ```
 
-4. **Access the app:**
+5. **Access the app:**
 
     ```sh
     http://localhost:[process.env.PORT]

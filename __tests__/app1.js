@@ -5,6 +5,7 @@ jest.mock("../controllers/test.js");
 jest.mock("../controllers/volunteer.js");
 jest.mock("../controllers/admin.js");
 jest.mock("../controllers/event.js");
+jest.mock("../controllers/report.js");
 jest.mock("../helpers/jwt.js");
 
 const VOLUNTEER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTUzMjExMjIsImRhdGEiOnsiaWQiOjEsImVtYWlsIjoidm9sdW50ZWVyQGRvbWFpbi5jb20iLCJyb2xlIjowfSwiaWF0IjoxNzUyNzI5MTIyfQ.bwCUxnpYuwGoqQwtLxD3Wenv3DqfQw1_hkwCBo_zsA0";
@@ -206,5 +207,31 @@ test("patch /event/1/status/participated", async () => {
 
 test("patch /event/1/status/noshow", async () => {
     const response = await request(app).patch("/event/1/status/noshow").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+// report
+test("post /report/volunteer/pdf", async () => {
+    const response = await request(app).post("/report/volunteer/pdf").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /report/volunteer/csv", async () => {
+    const response = await request(app).post("/report/volunteer/csv").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /report/event/:id/pdf", async () => {
+    const response = await request(app).post("/report/event/:id/pdf").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("post /report/event/:id/csv", async () => {
+    const response = await request(app).post("/report/event/:id/csv").set("Authorization", ADMIN_TOKEN);
+    expect(response.statusCode).toBe(200);
+});
+
+test("get /event/download", async () => {
+    const response = await request(app).get("/event/download").set("Authorization", ADMIN_TOKEN);
     expect(response.statusCode).toBe(200);
 });

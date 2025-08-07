@@ -351,6 +351,29 @@ async function getAllAssignedByEventId(conn, event_id) {
     return rows;
 }
 
+async function getReportData(conn) {
+    const [rows] = await conn.query(
+        'SELECT '
+        + '`volunteer`.*, '
+        + 'COUNT(CASE WHEN `volunteer_event`.`status` = 0 THEN 1 END) AS `total_assigned_event`, '
+        + 'COUNT(CASE WHEN `volunteer_event`.`status` = 1 THEN 1 END) AS `total_participated_event`, '
+        + 'COUNT(CASE WHEN `volunteer_event`.`status` = 2 THEN 1 END) AS `total_no_show_event` '
+        + 'FROM `volunteer` '
+        + 'LEFT JOIN (`volunteer_event` INNER JOIN `event` on `event`.`id` = `volunteer_event`.`event_id` AND `event`.`is_deleted` IS NOT ?) '
+        + 'ON `volunteer`.`id` = `volunteer_event`.`volunteer_id` AND `volunteer_event`.`is_deleted` IS NOT ? '
+        + 'WHERE `volunteer`.`is_deleted` = ? '
+        + 'GROUP BY `volunteer`.`id` ORDER BY `volunteer`.`id` ASC',
+        [true, true, false]
+    );
+    parse(rows);
+    for (let row of rows) {
+        row.total_event = row.total_assigned_event + row.total_participated_event + row.total_no_show_event;
+        row.skill = row.skill.join(",");
+        row.availability = row.availability.map((a) => (new Date(a)).toLocaleDateString()).join(",");
+    }
+    return rows;
+}
+
 export default {
     validator,
     prepare,
@@ -365,5 +388,6 @@ export default {
     updateQuestionAndAnswer,
     updateOne,
     getAll,
-    getAllAssignedByEventId
+    getAllAssignedByEventId,
+    getReportData
 }
