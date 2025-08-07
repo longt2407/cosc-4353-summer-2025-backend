@@ -85,7 +85,7 @@ app.post("/report/volunteer/pdf", auth.is(auth.ADMIN), reportController.exportVo
 app.post("/report/volunteer/csv", auth.is(auth.ADMIN), reportController.exportVolunteerCsv);
 app.post("/report/event/:id/pdf", auth.is(auth.ADMIN), reportController.exportEventPdf);
 app.post("/report/event/:id/csv", auth.is(auth.ADMIN), reportController.exportEventCsv);
-app.get("/report/download", auth.is(auth.ADMIN), reportController.download);
+app.get("/report/download", reportController.download);
 
 // *
 app.use(httpResp.Error[404]);

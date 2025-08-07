@@ -208,7 +208,6 @@ test("reportController.download", async () => {
     let req = {
         query: {
             token: jwt.sign({
-                adminId: 1,
                 fileName: "fileName"
             })
         },
@@ -286,34 +285,6 @@ test("reportController.download - error 3", async () => {
     let req = {
         query: {
             token: jwt.sign({
-            })
-        },
-        params: {
-            id: "2"
-        },
-        jwt: {
-            user: {
-                id: 1
-            }
-        }
-    };
-    let res = {
-        setHeader: jest.fn().mockReturnThis(),
-        end: jest.fn().mockReturnThis(),
-        download: jest.fn().mockReturnThis()
-    };
-    let data = await reportController.download(req, res);
-    expect(res.download).not.toHaveBeenCalled();
-});
-
-test("reportController.download - error 4", async () => {
-    let doc = new PDFDocument();
-    let spy = jest.spyOn(doc, "end").mockImplementation(() => {});
-    let req = {
-        query: {
-            token: jwt.sign({
-                adminId: 2,
-                fileName: "fileName"
             })
         },
         params: {

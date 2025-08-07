@@ -76,7 +76,6 @@ async function exportVolunteerPdf(req, res) {
         doc.end();
         
         let token = jwt.sign({
-            adminId,
             fileName
         });
 
@@ -108,7 +107,6 @@ async function exportVolunteerCsv(req, res) {
         await writer.writeRecords(data);
 
         let token = jwt.sign({
-            adminId,
             fileName
         });
 
@@ -209,7 +207,6 @@ async function exportEventPdf(req, res) {
         doc.end();
         
         let token = jwt.sign({
-            adminId,
             fileName
         });
 
@@ -256,7 +253,6 @@ async function exportEventCsv(req, res) {
         await writer.writeRecords(volunteers);
 
         let token = jwt.sign({
-            adminId,
             fileName
         });
 
@@ -266,7 +262,6 @@ async function exportEventCsv(req, res) {
 
 async function download(req, res) {
     try {
-        let adminId = req.jwt.user.id;
         let token = req.query.token;
         if (!token) {
             throw new HttpError({ statusCode: 400 });
@@ -276,11 +271,8 @@ async function download(req, res) {
         } catch(e) {
             throw new HttpError({ statusCode: 400 });
         }
-        if (!token.data.adminId || !token.data.fileName) {
+        if (!token.data.fileName) {
             throw new HttpError({ statusCode: 400 });
-        }
-        if (token.data.adminId !== adminId) {
-            throw new HttpError({ statusCode: 401 });
         }
         const file = path.resolve(DIR_REPORTS, token.data.fileName);
         res.download(file);
