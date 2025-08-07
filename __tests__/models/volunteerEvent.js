@@ -274,6 +274,7 @@ test("volunteerEventModel.updateParticipatedStatus 1", async () => {
         query: jest.fn()
             .mockResolvedValueOnce([[mockVolunteer[0]]])
             .mockResolvedValueOnce([[]])
+            .mockResolvedValueOnce([[]])
     };
     let eventId = 1
     let volunteerId = 1;
@@ -286,6 +287,7 @@ test("volunteerEventModel.updateParticipatedStatus - error 1", async () => {
     jest.spyOn(eventModel, "getOne").mockResolvedValue(mockEvent[1]);
     let conn = {
         query: jest.fn()
+            .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
     };
@@ -302,6 +304,7 @@ test("volunteerEventModel.updateParticipatedStatus - error 2", async () => {
         query: jest.fn()
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
+            .mockResolvedValueOnce([[]])
     };
     let eventId = 1
     let volunteerId = 1;
@@ -314,6 +317,7 @@ test("volunteerEventModel.updateParticipatedStatus - error 3", async () => {
     jest.spyOn(eventModel, "getOne").mockResolvedValue(mockEvent[0]);
     let conn = {
         query: jest.fn()
+            .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
     };
@@ -331,6 +335,7 @@ test("volunteerEventModel.updateNoShowStatus 1", async () => {
         query: jest.fn()
             .mockResolvedValueOnce([[mockVolunteer[0]]])
             .mockResolvedValueOnce([[]])
+            .mockResolvedValueOnce([[]])
     };
     let eventId = 1
     let volunteerId = 1;
@@ -343,6 +348,7 @@ test("volunteerEventModel.updateNoShowStatus - error 1", async () => {
     jest.spyOn(eventModel, "getOne").mockResolvedValue(mockEvent[1]);
     let conn = {
         query: jest.fn()
+            .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
     };
@@ -359,6 +365,7 @@ test("volunteerEventModel.updateNoShowStatus - error 2", async () => {
         query: jest.fn()
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
+            .mockResolvedValueOnce([[]])
     };
     let eventId = 1
     let volunteerId = 1;
@@ -371,6 +378,7 @@ test("volunteerEventModel.updateNoShowStatus - error 3", async () => {
     jest.spyOn(eventModel, "getOne").mockResolvedValue(mockEvent[0]);
     let conn = {
         query: jest.fn()
+            .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
             .mockResolvedValueOnce([[]])
     };

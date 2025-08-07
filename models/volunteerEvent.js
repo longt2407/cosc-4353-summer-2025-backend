@@ -124,6 +124,15 @@ async function updateParticipatedStatus(conn, eventId, volunteerId, adminId) {
     let sql_2 = "UPDATE volunteer_event SET status = ? WHERE volunteer_id = ? AND event_id = ?";
     let params_2 = [1, data.volunteer_id, data.event_id];
     await conn.query(sql_2, params_2);
+    // notification
+    let sql_3 = "INSERT INTO notification (volunteer_id, type, title, message) VALUES (?, ?, ?, ?)";
+    let params_3 = [
+        data.volunteer_id, 
+        0,
+        `[PARTICIPATED] ${event.name}`, 
+        `You have been marked as participated for event: ${event.name}. Please check your history for more detail.`
+    ];
+    await conn.query(sql_3, params_3);
     return null;
 }
 
@@ -153,6 +162,15 @@ async function updateNoShowStatus(conn, eventId, volunteerId, adminId) {
     let sql_2 = "UPDATE volunteer_event SET status = ? WHERE volunteer_id = ? AND event_id = ?";
     let params_2 = [2, data.volunteer_id, data.event_id];
     await conn.query(sql_2, params_2);
+    // notification
+    let sql_3 = "INSERT INTO notification (volunteer_id, type, title, message) VALUES (?, ?, ?, ?)";
+    let params_3 = [
+        data.volunteer_id, 
+        0,
+        `[NO-SHOW] ${event.name}`, 
+        `You have been marked as no-show for event: ${event.name}. Please check your history for more detail.`
+    ];
+    await conn.query(sql_3, params_3);
     return null;
 }
 
