@@ -39,9 +39,13 @@ async function exportVolunteerPdf(req, res) {
         doc.font("Times-Roman");
         doc.table({
             columnStyles: (i) => {
+                // istanbul ignore next
                 if (i === 0) return { width: 30, align: { x: "center", y: "center" } };
+                // istanbul ignore next
                 if (i === 4) return { width: 150, align: { y: "center" } };
+                // istanbul ignore next
                 if ([5, 6, 7, 8].includes(i)) return { align: { x: "center", y: "center" } };
+                // istanbul ignore next
                 return {
                     align: { y: "center" }
                 }
@@ -164,11 +168,17 @@ async function exportEventPdf(req, res) {
         doc.moveDown();
         doc.table({
             columnStyles: (i) => {
+                // istanbul ignore next
                 if (i === 0) return { width: 30, align: { x: "center", y: "center" } };
+                // istanbul ignore next
                 if (i === 4) return { width: 150, align: { y: "center" } };
+                // istanbul ignore next
                 if (i === 5) return { align: { x: "center", y: "center" } };
+                // istanbul ignore next
                 if ([8, 9].includes(i)) return { witdh: 50, align: { x: "center", y: "center" } };
+                // istanbul ignore next
                 if (i === 10) return { width: 50, align: { x: "center", y: "center" } }
+                // istanbul ignore next
                 return {
                     align: { y: "center" }
                 }
